@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJDashboard.Tests", "RJDashboard.Tests\RJDashboard.Tests.csproj", "{A676B44F-F9D2-475B-ABB4-AABEC5AB1858}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJController", "RJController\RJController.csproj", "{FA4F9FF0-4192-4A8F-BCCB-262DAAE4F5CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJDashboard", "RJDashboard\RJDashboard.csproj", "{292167EB-45B3-4161-B224-CAD370D7CF90}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A676B44F-F9D2-475B-ABB4-AABEC5AB1858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A676B44F-F9D2-475B-ABB4-AABEC5AB1858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A676B44F-F9D2-475B-ABB4-AABEC5AB1858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A676B44F-F9D2-475B-ABB4-AABEC5AB1858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA4F9FF0-4192-4A8F-BCCB-262DAAE4F5CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA4F9FF0-4192-4A8F-BCCB-262DAAE4F5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA4F9FF0-4192-4A8F-BCCB-262DAAE4F5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA4F9FF0-4192-4A8F-BCCB-262DAAE4F5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{292167EB-45B3-4161-B224-CAD370D7CF90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292167EB-45B3-4161-B224-CAD370D7CF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292167EB-45B3-4161-B224-CAD370D7CF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292167EB-45B3-4161-B224-CAD370D7CF90}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
