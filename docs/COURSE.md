@@ -23,37 +23,32 @@ Użyj `git status` aby uzyskać efekt Bold
 Adres mojego bloga to [Leszek Kruk](http://www.krukcom.pl).
 
 ## Linki do sekcji
-You can link directly to a section in a rendered file by hovering over the section heading to expose the link
-require "Cytaty"
+Możesz umieszczać link bezpośrednio do sekcji umieszczonej nad nagłówkiem
 
 ## Linki względne
-You can define relative links and image paths in your rendered files to help readers navigate to other files in your repository.
+Możesz umieścić linki względne i ścieżki do grafik w wyświetlanych plikach aby pomóc czytelnikom przechodzić do innych plików umieszczonych w repozytorium.
 
-A relative link is a link that is relative to the current file. For example, if you have a README file in root of your repository, 
-and you have another file in docs/CONTRIBUTING.md, the relative link to CONTRIBUTING.md in your README might look like this:
+Link względny jest linkiem, który związany jest z aktualnym plikiem. 
+Np. jeżeli masz plik README w katalogu głównym repozytorium i chcesz umieścić link do pliku umieszczonego w docs/COURSE.md to link względny może wyglądać następująco:
 
-[Link względny do pliku w tym samym katalogu](README.md)
+[Link względny](docs/COURSE.md)
 
-GitHub will automatically transform your relative link or image path based on whatever branch you're currently on, so that the link or path always works. You can use all relative link operands, such as ./ and ../.
-
-Relative links are easier for users who clone your repository. Absolute links may not work in clones of your repository - we recommend using relative links to refer to other files within your repository.
+Linki względne są lepsze dla użytkowników, którzy klonują repozytoria. Linki bezwzględne mogą nie zadziałać w kopiach repozytorium.end using relative links to refer to other files within your repository.
 
 ## URL
 GitHub automatycznie tworzy link ze standardowego adresu URL.
 
 Mój blog http://krukcom.pl
 
-[I'm an inline-style link](https://www.google.com)
+[Link do Google](https://www.google.com)
 
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+[Link do Google z tytułem](https://www.google.com "Google's Homepage")
 
-[I'm a reference-style link][Arbitrary case-insensitive reference text]
+[Link względny do pliku w repozytorium](../doc/LICENSE)
 
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
+[Możesz użyć numerów dla zdefiniowanych linków][1]
 
-[You can use numbers for reference-style link definitions][1]
-
-Or leave it empty and use the [link text itself].
+Albo pozostawić pusty link [opis linku].
 
 URLs and URLs in angle brackets will automatically get turned into links. 
 http://www.example.com or <http://www.example.com> and sometimes 
@@ -61,22 +56,16 @@ example.com (but not on Github, for example).
 
 Some text to show that the reference links can follow later.
 
-[arbitrary case-insensitive reference text]: https://www.mozilla.org
-[1]: http://slashdot.org
-[link text itself]: http://www.reddit.com
+[1]: http://krukcom.pl
+[opis linku]: http://krukcom.pl
 
-## YouTube 
-Youtube videos
+## YouTube - videos
 
-They can't be added directly but you can add an image with a link to the video like this:
+Nie można dodawać ich bezpośrednio, ale możemy dodać obraz z linkiem do tego filmu:
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE
-" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" 
+<a href="http://www.youtube.com/link_do_filmu
+" target="_blank"><img src="http://img.youtube.com/link_do_grafiki" 
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
-Or, in pure Markdown, but losing the image sizing and border:
-
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
-Referencing a bug by #bugID in your git commit links it to the slip. For example #1.
 
 # Listy
 
@@ -105,16 +94,16 @@ Referencing a bug by #bugID in your git commit links it to the slip. For example
 # Listy zadań
 - [x] @mentions, #refs, [links](), **formatting**, and <del>tags</del> supported
 - [ ] Zadanie 1
-- [ ] \(Optional) Zadanie 2
+- [ ] Zadanie 2
 - [x] Zadanie 3
 
-If a task list item description begins with a parenthesis, you'll need to escape it with \:
+Jeżeli opis elementu listy zadań zaczyna się nawiasem, musimy poprzedzić go za pomocą \
 
 # Mentioning
 @LeszekKruk/krukcom Co myślisz o tym tutorialu?
 
 # Odwoływanie się do problemów i pull requests
-You can bring up a list of suggested Issues and Pull Requests within the repository by typing #. Type the issue or PR number or title to filter the list, then hit either tab or enter to complete the highlighted result.
+-
 
 # Używanie emotionów
 Możemy używać emotionów wpisując :KODEMOTION'a:.
@@ -125,7 +114,7 @@ Możemy używać emotionów wpisując :KODEMOTION'a:.
 Nowy akapit można utworzyć, pozostawiając pustą linię między wierszami tekstu.
 
 # Ignorowanie formatowania 
-Możesz powiedzieć GitHub o ignorowaniu (lub ucieczce) formatowaniu Markdown, używając \ przed znakiem Markdown.
+Możesz poinformować GitHub o ignorowaniu (lub ucieczce) formatowania Markdown, używając \ przed znakiem Markdown.
 
 Ten tekst nie będzie \*pogrubiony\*.
 
