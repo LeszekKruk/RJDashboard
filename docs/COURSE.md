@@ -1,4 +1,4 @@
-# Tworzenie nagłówków h1
+# Nagłówek h1
 ## Nagłówek h2
 ### Nagłówek h3
 #### Nagłówek h4
@@ -17,7 +17,7 @@ Konfucjusz
 > "Jeśli kochasz to, co robisz, to nie jest to praca"
 
 # Komentowanie kodu
-Użyj `git status` aby uzyskać efekt Bold
+Użyj `git status` aby uzyskać ...
 
 # Linki
 Adres mojego bloga to [Leszek Kruk](http://www.krukcom.pl).
