@@ -1,13 +1,18 @@
-#Project title
-RJDashboard:
+# RJDashboard
 
-## Documentation
 
-## Features
+## Description
+-
+
+## Information
+Screenshots of application:
 
 ## Contribute
 * Source Code: github.com/LeszekKruk/RJDashboard
 
-## Author
+## Authors
 
-Leszek Kruk
+* [Leszek Kruk](http://krukcom.pl)
+
+## Licence
+See [LICENCE](docs/LICENCE) for more information.
