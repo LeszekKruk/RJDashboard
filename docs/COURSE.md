@@ -31,7 +31,7 @@ Możesz umieścić linki względne i ścieżki do grafik w wyświetlanych plikac
 Link względny jest linkiem, który związany jest z aktualnym plikiem. 
 Np. jeżeli masz plik README w katalogu głównym repozytorium i chcesz umieścić link do pliku umieszczonego w docs/COURSE.md to link względny może wyglądać następująco:
 
-[Link względny](docs/COURSE.md)
+[Link względny](LICENCE)
 
 Linki względne są lepsze dla użytkowników, którzy klonują repozytoria. Linki bezwzględne mogą nie zadziałać w kopiach repozytorium.end using relative links to refer to other files within your repository.
 
@@ -40,21 +40,15 @@ GitHub automatycznie tworzy link ze standardowego adresu URL.
 
 Mój blog http://krukcom.pl
 
-[Link do Google](https://www.google.com)
+[Link do bloga](https://krukcom.pl)
 
-[Link do Google z tytułem](https://www.google.com "Google's Homepage")
+[Link do bloga z tytułem](https://www.google.com "Leszek Kruk - blog")
 
-[Link względny do pliku w repozytorium](../doc/LICENSE)
+[Link względny do pliku w repozytorium](../docs/LICENSE)
 
 [Możesz użyć numerów dla zdefiniowanych linków][1]
 
 Albo pozostawić pusty link [opis linku].
-
-URLs and URLs in angle brackets will automatically get turned into links. 
-http://www.example.com or <http://www.example.com> and sometimes 
-example.com (but not on Github, for example).
-
-Some text to show that the reference links can follow later.
 
 [1]: http://krukcom.pl
 [opis linku]: http://krukcom.pl
