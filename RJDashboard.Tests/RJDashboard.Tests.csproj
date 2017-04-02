@@ -63,7 +63,7 @@
     <Compile Include="TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Laybel\Test_FieldType.cs" />
+    <Compile Include="Label\Test_ContentClass.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

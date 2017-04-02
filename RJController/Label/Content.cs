@@ -8,7 +8,7 @@ namespace RJController.Label
 {
     public class Content : IContent
     {
-        private string _type;
+        private ContentType _type;
         private string _name;
         private string _value;
         private bool _directEdit;
@@ -19,9 +19,10 @@ namespace RJController.Label
         {
             _name = name;
             _value = value;
+            _type = ContentType.NotImplemented;
         }
 
-        public Content(string name, string value, string type)
+        public Content(string name, string value, ContentType type)
         {
             _name = name;
             _value = value;
@@ -47,5 +48,21 @@ namespace RJController.Label
                 _value = value;
             }
         }
+
+        public ContentType ContentType {
+            get {
+                return _type;            
+            }
+            set {
+                _type = value;
+            }
+        }
+    }
+
+    public enum ContentType
+    {
+        NotImplemented = -1,
+        Static = 0,
+        Variable = 1 
     }
 }
