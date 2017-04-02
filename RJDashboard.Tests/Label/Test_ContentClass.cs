@@ -10,14 +10,11 @@ namespace RJDashboard.Tests.Label
 {
     public class Test_ContentClass 
     {
-        //czy kolekcja contents == 0
+
         
-        Content c2 = new Content("txtGit", "GitHub:", ContentType.Static);
-        Content c3 = new Content("txt", "https://github.com/LeszekKruk/RJDashboard", ContentType.Variable);
+        //Content c2 = new Content("txtGit", "GitHub:", ContentType.Static);
+        //Content c3 = new Content("txt", "https://github.com/LeszekKruk/RJDashboard", ContentType.Variable);
 
-        //exception dla contents == 0
-
-        //contents wczytujemy tylko dla variable
         [Fact]
         public void AddingNewContent_ReturnPropertyTypeFor_Name()
         {
@@ -27,6 +24,23 @@ namespace RJDashboard.Tests.Label
             var actual = c1;
 
             Assert.IsType(expected, actual);
+        }
+
+        [Fact]
+        public void AddingNewContent_ReturnProperty_Name_IsNotNull()
+        {
+            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
+
+            var result = c1.Name;
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void AddingNewContent_With_Invalid_Name_Throws_ArgumentException()
+        {
+            Exception ex = Assert.Throws<ArgumentException>(() => new Content(null, "Leszek Kruk", ContentType.Variable));
+            Assert.Equal("Parameter can't be null", ex.Message);
         }
 
         [Fact]

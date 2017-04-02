@@ -24,7 +24,15 @@ namespace RJController.Label
 
         public Content(string name, string value, ContentType type)
         {
-            _name = name;
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new System.ArgumentException("Parameter can't be null");
+            }
+            else
+            {
+                _name = name;
+            }
+            
             _value = value;
             _type = type;
         }
