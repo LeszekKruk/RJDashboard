@@ -19,9 +19,9 @@ namespace RJDashboard.Tests.Label
         [Fact]
         public void AddingNewContent_ReturnPropertyTypeFor_Name()
         {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
+            ObjectContent c1 = new ObjectContent("txtImieNazwisko", "Leszek Kruk", "Variable",-1,-1);
 
-            var expected = typeof(Content);
+            var expected = typeof(ObjectContent);
             var actual = c1;
 
             Assert.IsType(expected, actual);
@@ -30,9 +30,9 @@ namespace RJDashboard.Tests.Label
         [Fact]
         public void AddingNewContent_ReturnProperty_Name_IsNotNull()
         {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
+            ObjectContent c1 = new ObjectContent("txtImieNazwisko", "Leszek Kruk", "Variable",-1,-1);
 
-            var result = c1.Name;
+            var result = c1.ContentName;
 
             Assert.NotNull(result);
         }
@@ -40,16 +40,16 @@ namespace RJDashboard.Tests.Label
         [Fact]
         public void AddingNewContent_With_Invalid_Name_Throws_ArgumentException()
         {
-            Exception ex = Assert.Throws<ArgumentException>(() => new Content(null, "Leszek Kruk", ContentType.Variable));
+            Exception ex = Assert.Throws<ArgumentException>(() => new ObjectContent(null, "Leszek Kruk", "Variable",-1,-1));
             Assert.Equal("Parameter can't be null", ex.Message);
         }
 
         [Fact]
         public void AddingNewContent_ReturnPropertyValueFor_Name()
         {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
+            ObjectContent c1 = new ObjectContent("txtImieNazwisko", "Leszek Kruk", "Variable",-1,-1);
 
-            string result = c1.Name;
+            string result = c1.ContentName;
 
             Assert.Equal("txtImieNazwisko", result);
         }
@@ -57,41 +57,11 @@ namespace RJDashboard.Tests.Label
         [Fact]
         public void AddingNewContent_ReturnPropertyValueFor_Value()
         {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
+            ObjectContent c1 = new ObjectContent("txtImieNazwisko", "Leszek Kruk", "Variable",-1,-1);
 
-            string result = c1.Value;
+            string result = c1.ContentValue;
 
             Assert.Equal("Leszek Kruk", result);
-        }
-
-        [Fact]
-        public void AddingNewContent_ReturnPropertyValueFor_ContentType()
-        {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
-
-            ContentType result = c1.ContentType;
-
-            Assert.Equal(ContentType.Variable, result);
-        }
-
-        [Fact]
-        public void AddingNewContent_ReturnWrongValueFor_ContentType()
-        {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk", ContentType.Variable);
-
-            ContentType result = c1.ContentType;
-
-            Assert.NotEqual(ContentType.Static, result);
-        }
-
-        [Fact]
-        public void AddingNewContent_ReturnTrueValueFor_NotImplementedType()
-        {
-            Content c1 = new Content("txtImieNazwisko", "Leszek Kruk");
-
-            ContentType result = c1.ContentType;
-
-            Assert.Equal(ContentType.NotImplemented, result);
         }
     }
 

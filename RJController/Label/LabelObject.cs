@@ -1,46 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RJController.Label
 {
-    public class LabelObject 
+    public class LabelObject : ILabelObject
     {
-        private string _name;
-        private List<IContent> _contents;
+        private string _objectName;
+        private List<IObjectContent> _contents;
+
+        public LabelObject() { }
 
         public LabelObject(string name)
         {
-            _name = name;
-            _contents = new List<IContent>();
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new System.ArgumentException("Parameter can't be null");
+            }
+            else
+            {
+                _objectName = name;
+            }
+            _contents = new List<IObjectContent>();
         }
 
-        public string Name
+        public string ObjectName
         {
             get
             {
-                return _name;
+                return _objectName;
             }
-
             set
             {
-                _name = value;
+                _objectName = value;
             }
         }
 
-        public void AddContent(IContent content)
+        public void AddContent(IObjectContent content)
         {
-            _contents.Add(content);
+            try
+            {
+                _contents.Add(content);
+            }
+            catch (Exception)
+            {
+                throw new System.Exception("No List<Content>");
+            }            
         }
 
-        public List<IContent> Contents {
-            get
-            {
-                return _contents;
-            }
-        }
+        public IEnumerable<ObjectContent> Contents { get; set; }
 
     }
 }

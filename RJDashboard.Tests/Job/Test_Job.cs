@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace RJDashboard.Tests.Job
         [Fact]
         public void CreateNewJob_JobFile_IsNotNull()
         {
-            RJController.Job.Job job = new RJController.Job.Job(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
 
             var result = job.JobFile;
 
@@ -20,9 +21,16 @@ namespace RJDashboard.Tests.Job
         }
 
         [Fact]
+        public void CreateNewJob_With_Wrong_FileName_Throws_ArgumentException()
+        {
+            Exception ex = Assert.Throws<FileNotFoundException>(() => new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\xxx.job"));
+            Assert.Equal("File not found", ex.Message);
+        }
+
+        [Fact]
         public void CreateNewJob_JobId_ReturnPropertyValue()
         {
-            RJController.Job.Job job = new RJController.Job.Job(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
 
             int result = job.JobId;
 
@@ -32,14 +40,14 @@ namespace RJDashboard.Tests.Job
         [Fact]
         public void CreateNewJob_With_Wrong_JobId_Throws_ArgumentException()
         {
-            Exception ex = Assert.Throws<ArgumentException>(() => new RJController.Job.Job(-1, "C:\\temp\\_ReaTest\\jobs\\4 head.job"));
+            Exception ex = Assert.Throws<ArgumentException>(() => new RJController.Job.RJJob(-1, "C:\\temp\\_ReaTest\\jobs\\4 head.job"));
             Assert.Equal("Parameter JobId must be > null", ex.Message);
         }
 
         [Fact]
         public void CreateNewJob_JobFile_ReturnPropertyValue()
         {
-            RJController.Job.Job job = new RJController.Job.Job(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
 
             var result = job.JobFile;
 
@@ -49,7 +57,7 @@ namespace RJDashboard.Tests.Job
         [Fact]
         public void CreateNewJob_Installation_ReturnPropertyValue()
         {
-            RJController.Job.Job job = new RJController.Job.Job(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
 
             var result = job.Installation;
 
@@ -57,22 +65,48 @@ namespace RJDashboard.Tests.Job
         }
 
         [Fact]
-        public void CreateNewJob_Group_ReturnPropertyCount()
+        public void CreateNewJob_ReturnPropertyValueForGroupsCount()
         {
-            RJController.Job.Job job = new RJController.Job.Job(1, "C:\\temp\\_ReaTest\\jobs\\4 head.job");
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.Groups.Count;
-
-            Assert.Equal(4, result);
+            var result = job.LabelManagement.Count;
+            Assert.Equal(13, result);
         }
 
         [Fact]
-        public void CreateNewJob_Group_ReturnPropertyValue()
+        public void CreateNewJob_ReturnPropertyValueForObjectName()
         {
-            RJController.Job.Job job = new RJController.Job.Job(1, "C:\\temp\\_ReaTest\\jobs\\demojob_4ph.job");
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.Groups["Front"].ToString();
-            Assert.Equal(@"C:\\labels\demolabel_4ph.xml", result);
+            var result = job.LabelManagement[1].ObjectName;
+            Assert.Equal("Textbox_2", result);
+        }
+
+        [Fact]
+        public void CreateNewJob_ReturnPropertyValueForContentName()
+        {
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
+
+            var result = job.LabelManagement[1].ContentName;
+            Assert.Equal("Text _1", result);
+        }
+
+        [Fact]
+        public void CreateNewJob_ReturnPropertyValueForContentValue()
+        {
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
+
+            var result = job.LabelManagement[1].ContentValue;
+            Assert.Equal("BBBBBBBBBBBBBBBBBBBBBBBBBBBBB", result);
+        }
+
+        [Fact]
+        public void CreateNewJob_ReturnPropertyValueForContentName_LastValue()
+        {
+            RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
+
+            var result = job.LabelManagement[12].ContentValue;
+            Assert.Equal("MMM", result);
         }
     }
 }

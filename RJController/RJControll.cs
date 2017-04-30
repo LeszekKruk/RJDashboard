@@ -21,7 +21,7 @@ namespace RJController
         {
             _view = view;
 
-            //test
+            //test API
             job = new RJJob(1, "C:\\temp\\_ReaTest\\jobs\\test_LK.job");
             
             try
