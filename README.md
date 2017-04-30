@@ -2,8 +2,13 @@
 
 
 ## Description / Opis aplikacji
-RJDashbord jest aplikacją, która pozwala na zarządzanie wydrukami przy pomocy drukarki przemysłowej ReaJet HR.
-Dodatkowo przy pomocy RJDashboard możemy sterować modułem I/O - czyli zarządzać stanem wejść / wyjść.
+RJDashbord jest aplikacją konsolową, która pozwala na przejęcie kontroli nad sterownikiem ReaJet. 
+Funkcjonalności RJDashboard:
+* ustawienie / zmiana zadania
+* ustawienie parametrów I/O
+* zarządzanie i kontrola nad zmiennymi wydrukami (etykieta - baza danych)
+* sterowanie wyjściamy (poprzez moduł I/O)
+* zarządzanie błędami (poprzez moduł I/O)
 
 ## Information / 
 Screenshots of application / zrzuty ekranu:
@@ -17,12 +22,7 @@ Screenshots of application / zrzuty ekranu:
 ## Build status
 |Project|Branch|
 |-------|-------|
-|RJDashboard| [ - |
-
-##
-#1
-RJDashboard#1
-RJDashboard/github-flavored-markdown#1
+|RJDashboard| [ - ] |
 
 ## Contribute
 * Source Code / kod źródłowy: github.com/LeszekKruk/RJDashboard
