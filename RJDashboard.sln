@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJController", "RJControlle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJDashboard", "RJDashboard\RJDashboard.csproj", "{292167EB-45B3-4161-B224-CAD370D7CF90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJLogger", "RJLogger\RJLogger.csproj", "{7383F201-4750-4B13-B160-7EBE2C7C5484}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{292167EB-45B3-4161-B224-CAD370D7CF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{292167EB-45B3-4161-B224-CAD370D7CF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{292167EB-45B3-4161-B224-CAD370D7CF90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7383F201-4750-4B13-B160-7EBE2C7C5484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7383F201-4750-4B13-B160-7EBE2C7C5484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7383F201-4750-4B13-B160-7EBE2C7C5484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7383F201-4750-4B13-B160-7EBE2C7C5484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

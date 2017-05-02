@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using RJController.Dashboard;
-using NLog;
 using RJController.Enums;
+using RJLogger;
 
 namespace RJDashboard
 {
@@ -36,6 +36,7 @@ namespace RJDashboard
             UpdateTrackLogsAndErrors();
 
             ShowManagementableContents();
+
         }
 
         // PUBLIC
@@ -64,8 +65,8 @@ namespace RJDashboard
                     }
                     catch (Exception e)
                     {
-                        Logger logger = LogManager.GetCurrentClassLogger();
-                        logger.Error(e, "Błąd podczas czyszczenia zdarzeń");
+                        AppLogger.GetLogger().Warn("Błąd podczas czyszczenia zdarzeń");
+                        AppLogger.GetLogger().Warn(e.ToString());
                     }
                 }
             }
@@ -126,8 +127,8 @@ namespace RJDashboard
                             }
                             catch (Exception e)
                             {
-                                Logger logger = LogManager.GetCurrentClassLogger();
-                                logger.Error(e, "Błąd podczas czyszczenia logów");
+                                AppLogger.GetLogger().Warn("Błąd podczas czyszczenia logów");
+                                AppLogger.GetLogger().Warn(e.ToString());
                             }
                         }
                     }
@@ -135,8 +136,9 @@ namespace RJDashboard
                     {
                         txtLastError.Clear();
                         _maxLogErrors = 0;
-                        Logger logger = LogManager.GetCurrentClassLogger();
-                        logger.Error(e, "Błąd zapisu zdarzeń LogsAndErrors");
+
+                        AppLogger.GetLogger().Error("Błąd podczas czyszczenia zdarzeń");
+                        AppLogger.GetLogger().Error(e.ToString());
                     }
                 }
             }

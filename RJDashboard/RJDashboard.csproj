@@ -48,10 +48,6 @@
       <HintPath>..\packages\MetroFramework.Fonts.1.2.0.3\lib\net40\MetroFramework.Fonts.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.6\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -94,12 +90,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -118,6 +108,10 @@
     <ProjectReference Include="..\RJController\RJController.csproj">
       <Project>{fa4f9ff0-4192-4a8f-bccb-262daae4f5cd}</Project>
       <Name>RJController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RJLogger\RJLogger.csproj">
+      <Project>{7383f201-4750-4b13-b160-7ebe2c7c5484}</Project>
+      <Name>RJLogger</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
