@@ -59,6 +59,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RJControll.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RJLogger\RJLogger.csproj">
+      <Project>{7383f201-4750-4b13-b160-7ebe2c7c5484}</Project>
+      <Name>RJLogger</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

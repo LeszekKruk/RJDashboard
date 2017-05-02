@@ -2,6 +2,7 @@
 using RJController.Dashboard;
 using RJController.Enums;
 using RJController.Job;
+using RJLogger;
 using System;
 
 namespace RJController
@@ -451,7 +452,7 @@ namespace RJController
             lastError = ReaPi.SubscribeIOConfigurationSet(rjConnection.ConnectionID, 1).ToString();
 
             _view.DisplayLogsAndErrors("Połączenie: OK", " Wskaźnik połączenia: " + rjConnection.ConnectionID.ToString(), null);
-            
+
             //_view.UpdateControls("CONNECTED");
 
             lastError = ReaPi.GetIOOutputLevel(rjConnection.ConnectionID).ToString();
