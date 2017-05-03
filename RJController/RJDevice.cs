@@ -24,32 +24,53 @@ namespace RJController
 
             //test API
             job = new RJJob(1, "C:\\temp\\_ReaTest\\jobs\\test_LK.job");
-            
-            try
+
+            if (CheckReaPiLibrary() == true)
             {
-                _view.DisplayLogsAndErrors("Informacja o bibliotece ReaPi.dll", "", "");
-                _view.DisplayLogsAndErrors("ReaPi Info: " + ReaPi.GetLibInfo(),"","");
-                _view.DisplayLogsAndErrors("Revision: " + ReaPi.GetRevision(),"","");
+                rjConnection = new RJConnection();
 
-                rjConnection = new RJConnection();            
-            }
-            catch (Exception exc)
-            {
-                _view.DisplayLogsAndErrors("Błąd biblioteki ReaPi.dll: ", exc.Message.ToString(), exc.ToString());
-            }
+                _connectionCallback = new ReaPi.connectionCallbackPtr(OnConnectionCallback);
 
-            _connectionCallback = new ReaPi.connectionCallbackPtr(OnConnectionCallback);
+                ReaPi.EErrorCode tmpError = ReaPi.RegisterConnectionCallback(_connectionCallback, new IntPtr(0));
 
-            ReaPi.EErrorCode tmpError = ReaPi.RegisterConnectionCallback(_connectionCallback, new IntPtr(0));
-
-            if (tmpError == ReaPi.EErrorCode.OK)
-            {
-                _view.DisplayLogsAndErrors("Status OK - ReaPi.RegisterConnectionCallback()","","");          
+                if (tmpError == ReaPi.EErrorCode.OK)
+                {
+                    _view.DisplayLogsAndErrors("Status OK - ReaPi.RegisterConnectionCallback()", "", "");
+                }
+                else
+                {
+                    _view.DisplayLogsAndErrors("Błąd - ReaPi.RegisterConnectionCallback()", tmpError.ToString(), "");
+                }
             }
             else
             {
-                _view.DisplayLogsAndErrors("Błąd - ReaPi.RegisterConnectionCallback()", tmpError.ToString(), "");
+                _view.DisplayInformationError(ErrorType.libraryError);
+            }        
+        }
+
+        private bool CheckReaPiLibrary()
+        {
+            string log = "";
+            bool library = true;
+            try
+            {
+                log = "Informacja o bibliotece ReaPi.dll" + Environment.NewLine;
+                log += "ReaPi Info: " + ReaPi.GetLibInfo() + Environment.NewLine;
+                log += "Revision: " + ReaPi.GetRevision();
             }
+            catch (Exception e)
+            {
+                log = "Brak bibliotek ReaPi.dll";
+                AppLogger.GetLogger().Fatal(log, e);
+
+                library = false;
+            }
+            finally
+            {
+                DisplayMessage(log, null, null);
+            }
+
+            return library;
         }
 
         private void OnConnectionCallback(
@@ -449,6 +470,11 @@ namespace RJController
             lastError = ReaPi.GetIOOutputLevel(rjConnection.ConnectionID).ToString();
 
             _view.DisplayLogsAndErrors(lastError, null, null);
+        }
+
+        private void DisplayMessage(string message, string a, string b)
+        {
+            _view.DisplayLogsAndErrors(message, a, b);
         }
 
         private void OnDisconnect()

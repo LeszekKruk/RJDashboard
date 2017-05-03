@@ -19,6 +19,7 @@ namespace RJController.Enums
         printReject,
         noRecordToPrint, //brak rekordu do wydruku - prześlij jeszcze raz
         errorRecordToPrint,  //błąd rekordu - jeszcze raz
-        printedLastRecord   //wydrukowano ostatni rekord
+        printedLastRecord,   //wydrukowano ostatni rekord
+        libraryError
     }
 }
