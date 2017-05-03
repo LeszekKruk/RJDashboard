@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RJLogger;
+using RJDashboard.Files;
 
 namespace RJDashboard.Controls
 {
@@ -68,6 +69,30 @@ namespace RJDashboard.Controls
                 _count = 0;
 
                 AppLogger.GetLogger().Error("Błąd podczas dodawania loga.", e);
+            }
+        }
+
+        public void Save(string path)
+        {
+            try
+            {
+                if (_listLogs.Count() > 0)
+                {
+                    SaveLogs.Save(path, _listLogs);
+                }
+                else
+                {
+                    return ;
+                }
+                
+            }
+            catch (Exception e)
+            {
+                AppLogger.GetLogger().Error("Błąd zapisu danych.", e);
+            }
+            finally
+            {
+                _listLogs.Clear();
             }
         }
 

@@ -4,6 +4,8 @@ using RJController.Enums;
 using RJController.Job;
 using RJLogger;
 using System;
+using System.IO;
+using System.Threading;
 
 namespace RJController
 {
@@ -27,7 +29,9 @@ namespace RJController
 
             if (CheckReaPiLibrary() == true)
             {
-                rjConnection = new RJConnection();
+                rjConnection = new RJConnection((ReaPi.ConnectionIdentifier) 1, "test",null);
+                rjConnection.Job = job;
+                rjConnection.IOConfiguration = "osb_hr_1.dio";
 
                 _connectionCallback = new ReaPi.connectionCallbackPtr(OnConnectionCallback);
 
@@ -482,6 +486,34 @@ namespace RJController
 
         }
 
+        public string[] GetJobFiles()
+        {
+            try
+            {
+                //string[] files = Directory.GetFiles("\\\\" + _ipAddress + "\\rea-jet\\jobs");
+                string[] files = Directory.GetFiles("C:\\temp\\_ReaTest\\jobs");
+                return files;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public string[] GetIOFiles()
+        {
+            try
+            {
+                //string[] files = Directory.GetFiles("\\\\" + _ipAddress + "\\rea-jet\\device");
+                string[] files = Directory.GetFiles("C:\\temp\\_ReaTest\\device");
+                return files;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public void RJConnect(string ipAddress)
         {
             if (!(rjConnection == null) && (rjConnection.ConnectionID <= 0))
@@ -511,6 +543,16 @@ namespace RJController
             }
         }
 
+        public void RJSetJob(string jobName)
+        {
+
+        }
+
+        public void RJClearJob()
+        {
+
+        }
+
         public void RJDisconnect()
         {
             try
@@ -518,7 +560,7 @@ namespace RJController
                 if (rjConnection.ConnectionID <= 0)
                     return;
 
-                ReaPi.Disconnect(rjConnection.ConnectionID).ToString();
+                ReaPi.Disconnect(rjConnection.ConnectionID);
             }
             catch (Exception e)
             {

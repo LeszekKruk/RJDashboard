@@ -200,6 +200,7 @@
             this.tileAbout.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileAbout.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileAbout.UseTileImage = true;
+            this.tileAbout.Click += new System.EventHandler(this.tileAbout_Click);
             // 
             // tileDataPrint
             // 
@@ -215,6 +216,7 @@
             this.tileDataPrint.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileDataPrint.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileDataPrint.UseTileImage = true;
+            this.tileDataPrint.Click += new System.EventHandler(this.tileDataPrint_Click);
             // 
             // tileClose
             // 
@@ -230,6 +232,7 @@
             this.tileClose.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileClose.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileClose.UseTileImage = true;
+            this.tileClose.Click += new System.EventHandler(this.tileClose_Click);
             // 
             // tileLabelSettings
             // 
@@ -245,6 +248,7 @@
             this.tileLabelSettings.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileLabelSettings.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileLabelSettings.UseTileImage = true;
+            this.tileLabelSettings.Click += new System.EventHandler(this.tileLabelSettings_Click);
             // 
             // tileIOControl
             // 
@@ -260,6 +264,7 @@
             this.tileIOControl.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileIOControl.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileIOControl.UseTileImage = true;
+            this.tileIOControl.Click += new System.EventHandler(this.tileIOControl_Click);
             // 
             // tileJobControl
             // 
@@ -275,6 +280,7 @@
             this.tileJobControl.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileJobControl.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileJobControl.UseTileImage = true;
+            this.tileJobControl.Click += new System.EventHandler(this.tileJobControl_Click);
             // 
             // tileSettings
             // 
@@ -290,6 +296,7 @@
             this.tileSettings.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileSettings.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileSettings.UseTileImage = true;
+            this.tileSettings.Click += new System.EventHandler(this.tileSettings_Click);
             // 
             // panelConnectionStatus
             // 
@@ -604,11 +611,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabJobControl);
-            this.tabControl.Controls.Add(this.tabAbout);
-            this.tabControl.Controls.Add(this.tabSettings);
-            this.tabControl.Controls.Add(this.tabLabelSettings);
             this.tabControl.Controls.Add(this.tabIOControl);
             this.tabControl.Controls.Add(this.tabDataPrint);
+            this.tabControl.Controls.Add(this.tabLabelSettings);
+            this.tabControl.Controls.Add(this.tabAbout);
+            this.tabControl.Controls.Add(this.tabSettings);
             this.tabControl.FontWeight = MetroFramework.MetroTabControlWeight.Regular;
             this.tabControl.Location = new System.Drawing.Point(120, 195);
             this.tabControl.Margin = new System.Windows.Forms.Padding(2);
@@ -672,6 +679,7 @@
             this.tileSetJob.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileSetJob.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileSetJob.UseTileImage = true;
+            this.tileSetJob.Click += new System.EventHandler(this.tileSetJob_Click);
             // 
             // metroLabel2
             // 
@@ -685,7 +693,6 @@
             // 
             // cmbJobFiles
             // 
-            this.cmbJobFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cmbJobFiles.FormattingEnabled = true;
             this.cmbJobFiles.ItemHeight = 23;
             this.cmbJobFiles.Location = new System.Drawing.Point(0, 38);
@@ -693,7 +700,7 @@
             this.cmbJobFiles.Name = "cmbJobFiles";
             this.cmbJobFiles.Size = new System.Drawing.Size(271, 29);
             this.cmbJobFiles.Sorted = true;
-            this.cmbJobFiles.Style = MetroFramework.MetroColorStyle.White;
+            this.cmbJobFiles.Style = MetroFramework.MetroColorStyle.Orange;
             this.cmbJobFiles.TabIndex = 2;
             // 
             // tabAbout
@@ -1473,6 +1480,7 @@
             this.cmbIOFiles.Margin = new System.Windows.Forms.Padding(2);
             this.cmbIOFiles.Name = "cmbIOFiles";
             this.cmbIOFiles.Size = new System.Drawing.Size(240, 29);
+            this.cmbIOFiles.Style = MetroFramework.MetroColorStyle.Orange;
             this.cmbIOFiles.TabIndex = 18;
             // 
             // listOutputs
@@ -1844,6 +1852,8 @@
             this.Name = "Dashboard";
             this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "RJDashboard";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
+            this.Load += new System.EventHandler(this.Dashboard_Load);
             this.panelLeftButtons.ResumeLayout(false);
             this.panelConnectionStatus.ResumeLayout(false);
             this.panelConnectionStatus.PerformLayout();

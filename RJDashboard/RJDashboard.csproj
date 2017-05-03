@@ -73,6 +73,8 @@
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Files\AppFolders.cs" />
+    <Compile Include="Files\SaveLogs.cs" />
     <Compile Include="ProblemSolution.cs">
       <SubType>Form</SubType>
     </Compile>

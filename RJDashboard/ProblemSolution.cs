@@ -102,6 +102,11 @@ namespace RJDashboard
                     errorSolution = "1. Sprawdź czy uruchomiłeś aplikację z właściwej lokalizacji.\n";
                     errorSolution += "2. Przeinstaluj oprogramowanie.\n";
                     break;
+                case ErrorType.nullJob:
+                    errorDescription = "Brak wybranego zadania.";
+                    errorSolution = "Wybierz zadanie, które chcesz załadować na sterownik.\n";
+                    errorSolution += "Wybierz przycisk 'Ustaw'";
+                    break;
                 default:
                     errorDescription = "STOP Job";
                     errorSolution = "";
