@@ -14,7 +14,7 @@ namespace RJController.Job
         private int _jobId;
         private string _jobFile;
         private string _installation;
-        private List<IManagementable> _labelManagement;
+        private List<IVariableDataLabel> _variableDataLabel;
 
         public RJJob(int jobId, string jobFile)
         {
@@ -71,16 +71,16 @@ namespace RJController.Job
             }
         }
 
-        public List<IManagementable> LabelManagement
+        public List<IVariableDataLabel> LabelManagement
         {
             get
             {
-                return _labelManagement;
+                return _variableDataLabel;
             }
 
             set
             {
-                _labelManagement = value;
+                _variableDataLabel = value;
             }
         }
 

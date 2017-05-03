@@ -5,34 +5,23 @@ namespace RJController.Label
 {
     public class LabelObject : ILabelObject
     {
-        private string _objectName;
         private List<IObjectContent> _contents;
+
+        public string ObjectName { get; set; }
 
         public LabelObject() { }
 
-        public LabelObject(string name)
+        public LabelObject(string objectName)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(objectName))
             {
                 throw new System.ArgumentException("Parameter can't be null");
             }
             else
             {
-                _objectName = name;
+                ObjectName = objectName;
             }
             _contents = new List<IObjectContent>();
-        }
-
-        public string ObjectName
-        {
-            get
-            {
-                return _objectName;
-            }
-            set
-            {
-                _objectName = value;
-            }
         }
 
         public void AddContent(IObjectContent content)

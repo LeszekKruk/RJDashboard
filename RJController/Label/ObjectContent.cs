@@ -9,11 +9,16 @@ namespace RJController.Label
 {
     public class ObjectContent : IObjectContent
     {
-        private string _contentType;
-        private string _contentName;
-        private string _contentValue;
-        int _dataField;
-        int _outputControl;
+        public string ContentName { get; set; }
+
+        public string ContentValue { get; set; }
+
+        public string ContentType { get; set; }
+
+        public int OutputControl { get; set; }
+
+        public int DataField { get; set; }
+
 
         public ObjectContent() { }
 
@@ -25,73 +30,13 @@ namespace RJController.Label
             }
             else
             {
-                _contentName = contentName;
+                ContentName = contentName;
             }
 
-            _contentValue = contentValue;
-            _contentType = contentType;
-            _dataField = dataField;
-            _outputControl = outputControl;
+            ContentValue = contentValue;
+            ContentType = contentType;
+            DataField = dataField;
+            OutputControl = outputControl;
         }
-
-        public string ContentName
-        {
-            get
-            {
-                return _contentName;
-            }
-            set
-            {
-                _contentName = value;
-            }
-        }
-
-        public string ContentValue
-        {
-            get
-            {
-                return _contentValue;
-            }
-            set
-            {
-                _contentValue = value;
-            }
-        }
-
-        public string ContentType {
-            get {
-                return _contentType;            
-            }
-            set {
-                _contentType = value;
-            }
-        }
-
-        public int OutputControl
-        {
-            get
-            {
-                return _outputControl;
-            }
-
-            set
-            {
-                _outputControl = value;
-            }
-        }
-
-        public int DataField
-        {
-            get
-            {
-                return _dataField;
-            }
-
-            set
-            {
-                _dataField = value;
-            }
-        }
-
     }
 }

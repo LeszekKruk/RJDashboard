@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RJController.Label
 {
-    public interface IManagementable: IObjectContent, ILabelObject
+    public interface IVariableDataLabel : IObjectContent, ILabelObject
     {
         string GroupName {get; set;}
     }

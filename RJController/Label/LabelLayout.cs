@@ -11,15 +11,15 @@ namespace RJController.Label
 {
     public class LabelLayout
     {
-        private List<IManagementable> _variableObjects;
+        private List<IVariableDataLabel> _variableObjects;
 
         public LabelLayout(string jobFile)
         {
-            _variableObjects = new List<IManagementable>();
+            _variableObjects = new List<IVariableDataLabel>();
             GetLabelsForJob(jobFile);
         }
 
-        public List<IManagementable> VariableObjects
+        public List<IVariableDataLabel> VariableObjects
         {
             get
             {
@@ -90,7 +90,7 @@ namespace RJController.Label
             }
         }
 
-        private static void GetVariableContents(string groupName, List<IManagementable> _variableObjects, IEnumerable<LabelObject> objects)
+        private static void GetVariableContents(string groupName, List<IVariableDataLabel> _variableObjects, IEnumerable<LabelObject> objects)
         {
             foreach (var obj in objects)
             {
@@ -98,16 +98,16 @@ namespace RJController.Label
                 {
                     if (content.ContentType == "Variable")
                     {
-                        IManagementable pm = new PrintManagement();
+                        IVariableDataLabel vdl = new VariableDataLabel();
 
-                        pm.GroupName = groupName;
-                        pm.ObjectName = obj.ObjectName;
-                        pm.ContentName = content.ContentName;
-                        pm.ContentValue = content.ContentValue;
-                        pm.OutputControl = -1;
-                        pm.DataField = -1;
+                        vdl.GroupName = groupName;
+                        vdl.ObjectName = obj.ObjectName;
+                        vdl.ContentName = content.ContentName;
+                        vdl.ContentValue = content.ContentValue;
+                        vdl.OutputControl = -1;
+                        vdl.DataField = -1;
 
-                        _variableObjects.Add(pm);
+                        _variableObjects.Add(vdl);
                     }
                 }
             }

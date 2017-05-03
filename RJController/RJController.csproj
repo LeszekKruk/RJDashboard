@@ -46,7 +46,7 @@
     <Compile Include="Dashboard\IDashboard.cs" />
     <Compile Include="Enums\ErrorType.cs" />
     <Compile Include="Label\ILabelObject.cs" />
-    <Compile Include="Job\IManagementable.cs" />
+    <Compile Include="Job\IVariableDataLabel.cs" />
     <Compile Include="Label\LabelLayout.cs" />
     <Compile Include="RJConnection.cs" />
     <Compile Include="RJPaths.cs" />
@@ -55,9 +55,9 @@
     <Compile Include="Label\LabelObject.cs" />
     <Compile Include="Label\IObjectContent.cs" />
     <Compile Include="Label\ObjectContent.cs" />
-    <Compile Include="Job\PrintManagement.cs" />
+    <Compile Include="Job\VariableDataLabel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RJControll.cs" />
+    <Compile Include="RJDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RJLogger\RJLogger.csproj">
