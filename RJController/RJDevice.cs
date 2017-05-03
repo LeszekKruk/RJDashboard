@@ -44,7 +44,7 @@ namespace RJController
             }
             else
             {
-                _view.DisplayInformationError(ErrorType.libraryError);
+                _view.ShowProblemSolution(ErrorType.libraryError);
             }        
         }
 
@@ -104,7 +104,7 @@ namespace RJController
                 else
                 {
                     _view.DisplayLogsAndErrors("Brak możliwości połączenia", null, null );
-                    _view.DisplayInformationError(ErrorType.errorConnection);
+                    _view.ShowProblemSolution(ErrorType.errorConnection);
                 }
             }
             else if (state == ReaPi.EConnState.DISCONNECT)
@@ -123,7 +123,7 @@ namespace RJController
             {
                 _view.DisplayLogsAndErrors("Połączenie <" + connectionId + "> zamknięte z błędem ", errorCode.ToString(), null);
                 //_view.UpdateControls("DISCONNECTED");
-                _view.DisplayInformationError(ErrorType.errorConnection);
+                _view.ShowProblemSolution(ErrorType.errorConnection);
             }
         }
 
@@ -496,7 +496,7 @@ namespace RJController
                     else
                     {
                         _view.DisplayLogsAndErrors("Połączenie <" + ipAddress + "> zamknięte z błędem ", errorCode.ToString(), null);
-                        _view.DisplayInformationError(ErrorType.errorConnection);
+                        _view.ShowProblemSolution(ErrorType.errorConnection);
                     }                    
                 }
                 catch (Exception)
@@ -507,7 +507,7 @@ namespace RJController
             }
             else
             {
-                _view.DisplayInformationError(ErrorType.nullIPAddress);
+                _view.ShowProblemSolution(ErrorType.nullIPAddress);
             }
         }
 

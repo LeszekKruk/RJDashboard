@@ -11,6 +11,6 @@ namespace RJController.Dashboard
     {
         void DisplayEvents(string log);
         void DisplayLogsAndErrors(string log, string errorCodeDomain, string messageError);
-        void DisplayInformationError(ErrorType type);
+        void ShowProblemSolution(ErrorType type);
     }
 }
