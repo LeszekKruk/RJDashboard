@@ -9,27 +9,12 @@ namespace RJLogger
 {
     public class AppLogger
     {
-        private readonly Logger _logger;
+        private readonly ILogger _logger;
         private static AppLogger _defaultLogger;
-        private LogLevel _logLevel = LogLevel.Debug;
-
-        private static readonly IDictionary<Type, AppLogger> _allLoggers = new Dictionary<Type, AppLogger>();
 
         private AppLogger()
         {
             _logger = LogManager.GetCurrentClassLogger();
-        }
-
-        public static AppLogger GetLogger(Type type)
-        {
-            AppLogger logger;
-            _allLoggers.TryGetValue(type, out logger);
-            if (logger == null)
-            {
-                logger = new AppLogger();
-                _allLoggers[type] = logger;
-            }
-            return logger;
         }
 
         public static AppLogger GetLogger()
@@ -61,9 +46,19 @@ namespace RJLogger
             _logger.Error(message);
         }
 
+        public void Error(string message, Exception exception)
+        {
+            _logger.Error(exception, message);
+        }
+
         public void Fatal(string message)
         {
             _logger.Fatal(message);
+        }
+
+        public void Fatal(string message, Exception exception)
+        {
+            _logger.Fatal(exception, message);
         }
     }
 }

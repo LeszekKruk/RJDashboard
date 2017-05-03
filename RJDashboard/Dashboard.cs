@@ -12,7 +12,7 @@ namespace RJDashboard
 {
     public partial class Dashboard : MetroForm, IDashboard
     {
-        RJControll rjControll;
+        RJDevice rjControll;
 
         private int DISPLAY_MAX_EVENTS = 100;
         private int DISPLAY_MAX_LOG_ERRORS = 100;
@@ -30,13 +30,16 @@ namespace RJDashboard
             listEvents = new List<string>();
             listLogsAndErrors = new List<string>();
 
-            rjControll = new RJControll(this);
+            rjControll = new RJDevice(this);
 
             UpdateTrackEvents();
             UpdateTrackLogsAndErrors();
 
             ShowManagementableContents();
 
+            AppLogger.GetLogger().Info("Konstruktor");
+            AppLogger.GetLogger().Error("Error - konstruktor",  new Exception("XXX"));
+            AppLogger.GetLogger().Warn("Warn - konstruktor");
         }
 
         // PUBLIC
