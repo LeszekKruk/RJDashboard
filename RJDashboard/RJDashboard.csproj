@@ -61,25 +61,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\TextLogs.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TextLogs.Designer.cs">
+      <DependentUpon>TextLogs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dashboard.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Information.cs">
+    <Compile Include="ProblemSolution.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Information.Designer.cs">
-      <DependentUpon>Information.cs</DependentUpon>
+    <Compile Include="ProblemSolution.Designer.cs">
+      <DependentUpon>ProblemSolution.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\TextLogs.resx">
+      <DependentUpon>TextLogs.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Information.resx">
-      <DependentUpon>Information.cs</DependentUpon>
+    <EmbeddedResource Include="ProblemSolution.resx">
+      <DependentUpon>ProblemSolution.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -117,6 +126,7 @@
   <ItemGroup>
     <Content Include="MetroFramework.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

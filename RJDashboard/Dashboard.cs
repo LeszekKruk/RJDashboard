@@ -6,40 +6,26 @@ using System.Drawing;
 using System.Windows.Forms;
 using RJController.Dashboard;
 using RJController.Enums;
-using RJLogger;
+using System.Threading;
 
 namespace RJDashboard
 {
     public partial class Dashboard : MetroForm, IDashboard
     {
-        RJDevice rjControll;
-
-        private int DISPLAY_MAX_EVENTS = 100;
-        private int DISPLAY_MAX_LOG_ERRORS = 100;
-        private int _maxEvents = 0;
-        private int _maxLogErrors = 0;
-
-        private List<string> listEvents;
-        private List<string> listLogsAndErrors;
-
-        //delegate void DisplayInformationErrorCallback(ErrorType type);
+        RJDevice rjDevice;
 
         public Dashboard()
         {
             InitializeComponent();
-            listEvents = new List<string>();
-            listLogsAndErrors = new List<string>();
 
-            rjControll = new RJDevice(this);
+            rjDevice = new RJDevice(this);
 
             UpdateTrackEvents();
             UpdateTrackLogsAndErrors();
 
             ShowManagementableContents();
 
-            //AppLogger.GetLogger().Info("Konstruktor");
-            //AppLogger.GetLogger().Error("Error - konstruktor",  new Exception("XXX"));
-            //AppLogger.GetLogger().Warn("Warn - konstruktor");
+            
         }
 
         // PUBLIC
@@ -54,24 +40,7 @@ namespace RJDashboard
             }
             else
             {
-                txtEvents.AppendText(Environment.NewLine + log);
-                _maxEvents += 1;
-
-                listEvents.Add(log);
-
-                if (_maxEvents > DISPLAY_MAX_EVENTS)
-                {
-                    try
-                    {
-                        _maxEvents = 0;
-                        txtEvents.Clear();
-                    }
-                    catch (Exception e)
-                    {
-                        AppLogger.GetLogger().Warn("Błąd podczas czyszczenia zdarzeń");
-                        AppLogger.GetLogger().Warn(e.ToString());
-                    }
-                }
+                logEvents.AddLog(log, null, null);
             }
         }
 
@@ -79,7 +48,6 @@ namespace RJDashboard
         {
             if (this.InvokeRequired)
             {
-                //Action<string, string, string> logsAndErrorsCallback = new Action < string, string, string>(DisplayLogsAndErrors);
                 Action<string, string, string> logsAndErrorsCallback = this.DisplayLogsAndErrors;
                 if (!this.Created || this.IsDisposed)
                     return;
@@ -87,83 +55,27 @@ namespace RJDashboard
             }
             else
             {
-                if (log != "" || errorMessage != "" || errorCodeDomain != "")
-                {
-                    try
-                    {
-                        _maxLogErrors += 1;
-
-                        txtLastError.AppendText(Environment.NewLine);
-                        txtLastError.AppendText("------------------------------");
-
-                        listLogsAndErrors.Add("------------------------------");
-                        if (log != "" && log != null)
-                        {
-                            txtLastError.AppendText(Environment.NewLine);
-                            txtLastError.AppendText("Log: " + log);
-
-                            listLogsAndErrors.Add(log);
-                        }
-
-                        if (errorMessage != "" && errorMessage != null)
-                        {
-                            txtLastError.AppendText(Environment.NewLine);
-                            txtLastError.AppendText("LME: " + errorMessage);
-
-                            listLogsAndErrors.Add("LME: " + errorMessage);
-                        }
-
-                        if (errorCodeDomain != "" && errorCodeDomain != null)
-                        {
-                            txtLastError.AppendText(Environment.NewLine);
-                            txtLastError.AppendText("LCD: " + errorCodeDomain);
-
-                            listLogsAndErrors.Add("LCD: " + errorCodeDomain);
-                        }
-
-                        if (_maxLogErrors > DISPLAY_MAX_LOG_ERRORS)
-                        {
-                            try
-                            {
-                                _maxLogErrors = 0;
-                                txtLastError.Clear();
-                            }
-                            catch (Exception e)
-                            {
-                                AppLogger.GetLogger().Warn("Błąd podczas czyszczenia logów");
-                                AppLogger.GetLogger().Warn(e.ToString());
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        txtLastError.Clear();
-                        _maxLogErrors = 0;
-
-                        AppLogger.GetLogger().Error("Błąd podczas czyszczenia zdarzeń");
-                        AppLogger.GetLogger().Error(e.ToString());
-                    }
-                }
+                logErrors.AddLog(log, errorCodeDomain, errorMessage);
             }
         }
 
-        public void DisplayInformationError(ErrorType type)
+        public void ShowProblemSolution(ErrorType type)
         {
             if (this.InvokeRequired)
             {
-                Action<ErrorType> showInformationErrorCallback = new Action<ErrorType>(this.DisplayInformationError);
+                Action<ErrorType> showProblemSolution = new Action<ErrorType>(this.ShowProblemSolution);
                 if (!this.Created || this.IsDisposed)
                     return;
-                this.Invoke(showInformationErrorCallback, type);
+                this.Invoke(showProblemSolution, type);
             }
             else
             {               
-                Information info = new Information(type);
+                ProblemSolution info = new ProblemSolution(type);
                 info.Show();
             }
         }
 
-        // PRIVATE
+        // PRIVATE Methods
 
         private void ShowManagementableContents()
         {
@@ -191,15 +103,15 @@ namespace RJDashboard
                 listLabelContents.Columns.Add(columnHeader);
             }
 
-            for (int index = 0; index < rjControll.job.LabelManagement.Count; ++index)
+            for (int index = 0; index < rjDevice.job.LabelManagement.Count; ++index)
             {
-                ListViewItem listViewItem = new ListViewItem(rjControll.job.LabelManagement[index].GroupName);
+                ListViewItem listViewItem = new ListViewItem(rjDevice.job.LabelManagement[index].GroupName);
 
-                listViewItem.SubItems.Add(rjControll.job.LabelManagement[index].ObjectName);
-                listViewItem.SubItems.Add(rjControll.job.LabelManagement[index].ContentName);
-                listViewItem.SubItems.Add(rjControll.job.LabelManagement[index].ContentValue);
-                listViewItem.SubItems.Add(rjControll.job.LabelManagement[index].DataField.ToString());
-                listViewItem.SubItems.Add(rjControll.job.LabelManagement[index].OutputControl.ToString());
+                listViewItem.SubItems.Add(rjDevice.job.LabelManagement[index].ObjectName);
+                listViewItem.SubItems.Add(rjDevice.job.LabelManagement[index].ContentName);
+                listViewItem.SubItems.Add(rjDevice.job.LabelManagement[index].ContentValue);
+                listViewItem.SubItems.Add(rjDevice.job.LabelManagement[index].DataField.ToString());
+                listViewItem.SubItems.Add(rjDevice.job.LabelManagement[index].OutputControl.ToString());
 
                 listLabelContents.Items.Add(listViewItem);
             }
@@ -208,13 +120,54 @@ namespace RJDashboard
         private void UpdateTrackEvents()
         {
             labelMaxEvents.Text = "Ilość wyświetlanych zdarzeń: " + trackEvents.Value.ToString();
-            DISPLAY_MAX_EVENTS = trackEvents.Value;
+            logEvents.MaxLogs = trackEvents.Value;
         }
 
         private void UpdateTrackLogsAndErrors()
         {
             labelMaxErrors.Text = "Ilość wyświetlanych logów: " + trackErrors.Value.ToString();
-            DISPLAY_MAX_LOG_ERRORS = trackErrors.Value;
+            logErrors.MaxLogs = trackErrors.Value;
+        }
+
+
+
+        // End Private
+
+
+
+        // CONTROL AKCTIONS
+        private void tileClearJob_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                logErrors.AddLog($"Error {i}", null, null);
+                logEvents.AddLog($"Event {i}", null, null);
+                Thread.Sleep(500);
+            }
+        }
+
+        private void tileConnect_Click(object sender, EventArgs e)
+        {
+            //string ip = cmbIpAddress.SelectedItem.ToString();
+            try
+            {
+                if (cmbIpAddress.SelectedItem.ToString() == null)
+                {
+                    ShowProblemSolution(ErrorType.nullIPAddress);
+                }
+                else
+                {
+                    rjDevice.RJConnect(cmbIpAddress.SelectedItem.ToString());
+                    //UpdateControls("CONNECTED");
+                }
+            }
+            catch (Exception) { }
+        }
+
+        private void tileDisconnect_Click(object sender, EventArgs e)
+        {
+            rjDevice.RJDisconnect();
+            //UpdateControls("DISCONNECTED");
         }
 
         private void trackEvents_ValueChanged(object sender, EventArgs e)
@@ -226,29 +179,6 @@ namespace RJDashboard
         {
             UpdateTrackLogsAndErrors();
         }
-
-        private void tileConnect_Click(object sender, EventArgs e)
-        {
-            //string ip = cmbIpAddress.SelectedItem.ToString();
-            try
-            {
-                if (cmbIpAddress.SelectedItem.ToString() == null)
-                {
-                    DisplayInformationError(ErrorType.nullIPAddress);
-                }
-                else
-                {
-                    rjControll.RJConnect(cmbIpAddress.SelectedItem.ToString());
-                    //UpdateControls("CONNECTED");
-                }
-            }
-            catch (Exception) {}           
-        }
-
-        private void tileDisconnect_Click(object sender, EventArgs e)
-        {
-            rjControll.RJDisconnect();
-            //UpdateControls("DISCONNECTED");
-        }
+        //
     }
 }

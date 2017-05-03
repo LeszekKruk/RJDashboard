@@ -303,6 +303,31 @@
         vgAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="metroLabel18.Text" xml:space="preserve">
+    <value>Zakładka ::Etykieta:: 
+Do każdego pola etykiety przypisz kolumnę z danymi - przycisk [Ustaw]. 
+Jeżeli chcesz sterować wyjściem - przypisz go do odpowiedniego pola etykiety
+Ustawienia etykiety możesz zapisać [Zapisz jako...] lub wczytać wcześniej zapisaną konfigurację [Wczytaj]</value>
+  </data>
+  <data name="tileSetLogLevel.TileImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAAvdJREFUaEPtly9QG0EUhyMQiIiICgQCgUAgEBUIBKKyMqICURFRUYGsZAZRURFZ
+        UYFAICoQiIqKCgQCgUBUIhARiApEBTNJv9/e73YuIUcS5u6K2G/mze57b/e9vbv9d61EIpFIJBKJF8Jw
+        OFxFesgZcoHcWC5t2x+NRmtu/nLQoBjcCeVc0PYHxYa7/1/0VpG/2dDmhz4PyCHVJYdqFiVmAEdhNAWw
+        nSJ7VNeQNrKsumz2PaBH0PU12g7bHCQeGzz6LfLW7lJoukW7q6xXBvpPiua+BAm1GCPo3yk6ds+EtkvI
+        Af3i16D+xe56IZemQ5zzGrxdC0Pfjw4TQH9tV32QJO421G8p5n7z0yDGryxaiHducz2QYNW5Augz5/w0
+        6BofWjGRP1nEEHPbruoheM95lOjU5oWg644GjHRtUlxtpwHVba4egp85jxLt2Tw39HmHhIVLeY9syo66
+        JZvAdhUa1wHBL5xHjF0J0A+Q0tMV3yd1yiHWMUXcOtHDNKIc2FQ9BL9REhMOH0odaGFhU/6mGFvU9n+V
+        Pwf90TTBFs8Gm6qHJNp1csJAKdvYzzNTGJx2lfBmKeUrTjtdH3ryTYL90s1qfYCYhHrcLVBX0PX2A9S/
+        UchWbK85X7pr4Qtfl/LOpuohuO4tAeofbA5g2sA2yLzBX9waB0jpIYUvbs/Ur22uHoLHKwT1Y5sjmLVF
+        3mctMtD1ZZ78B5iI27e5egi+7jxKpPm8blcEW1c+t9HaeGXXVPB3aFdcW7t21QPJdHMMUD+yeQzs+kfQ
+        BW/ZplIUI4sW4l1T1HsrJckmUrxF7tu1MPTtOkzOG7vqhcSfnTBHh9hCb47274kT1wv1R2uqNsinwynu
+        SAJdi3Xm/KWdLm/xbBDoOsSa/StTQhLH9ZCDTb+N2lV2kPyw60jH3kfi9irQNfiVELRpSKwv0Q8jeQb0
+        1X2o+f/hSRjINlK86D0JbbXbNLNgF4FBaZocaoBI8VS+s01faxdp7gc+kUgkEolEooxW6x+uNUqiBCmB
+        vgAAAABJRU5ErkJggg==
+</value>
+  </data>
   <data name="tileLoadLabelSettings.TileImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -432,31 +457,6 @@
         TU08ycl4P2WbNLade0C7VADjw1Tx8FSYHjDvagzBMSghZDYg5FcQxXQBndksu86HqNuUHydY2oCg8Alx
         DasB9O01sAjWFQ0UDaynAX/L+tRyCev0R0bEN0CSDyeJgvX6MYq/iAr+AaXSD5LhPhnS+v9WAAAAAElF
         TkSuQmCC
-</value>
-  </data>
-  <data name="metroLabel18.Text" xml:space="preserve">
-    <value>Zakładka ::Etykieta:: 
-Do każdego pola etykiety przypisz kolumnę z danymi - przycisk [Ustaw]. 
-Jeżeli chcesz sterować wyjściem - przypisz go do odpowiedniego pola etykiety
-Ustawienia etykiety możesz zapisać [Zapisz jako...] lub wczytać wcześniej zapisaną konfigurację [Wczytaj]</value>
-  </data>
-  <data name="tileSetLogLevel.TileImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAvdJREFUaEPtly9QG0EUhyMQiIiICgQCgUAgEBUIBKKyMqICURFRUYGsZAZRURFZ
-        UYFAICoQiIqKCgQCgUBUIhARiApEBTNJv9/e73YuIUcS5u6K2G/mze57b/e9vbv9d61EIpFIJBKJF8Jw
-        OFxFesgZcoHcWC5t2x+NRmtu/nLQoBjcCeVc0PYHxYa7/1/0VpG/2dDmhz4PyCHVJYdqFiVmAEdhNAWw
-        nSJ7VNeQNrKsumz2PaBH0PU12g7bHCQeGzz6LfLW7lJoukW7q6xXBvpPiua+BAm1GCPo3yk6ds+EtkvI
-        Af3i16D+xe56IZemQ5zzGrxdC0Pfjw4TQH9tV32QJO421G8p5n7z0yDGryxaiHducz2QYNW5Augz5/w0
-        6BofWjGRP1nEEHPbruoheM95lOjU5oWg644GjHRtUlxtpwHVba4egp85jxLt2Tw39HmHhIVLeY9syo66
-        JZvAdhUa1wHBL5xHjF0J0A+Q0tMV3yd1yiHWMUXcOtHDNKIc2FQ9BL9REhMOH0odaGFhU/6mGFvU9n+V
-        Pwf90TTBFs8Gm6qHJNp1csJAKdvYzzNTGJx2lfBmKeUrTjtdH3ryTYL90s1qfYCYhHrcLVBX0PX2A9S/
-        UchWbK85X7pr4Qtfl/LOpuohuO4tAeofbA5g2sA2yLzBX9waB0jpIYUvbs/Ur22uHoLHKwT1Y5sjmLVF
-        3mctMtD1ZZ78B5iI27e5egi+7jxKpPm8blcEW1c+t9HaeGXXVPB3aFdcW7t21QPJdHMMUD+yeQzs+kfQ
-        BW/ZplIUI4sW4l1T1HsrJckmUrxF7tu1MPTtOkzOG7vqhcSfnTBHh9hCb47274kT1wv1R2uqNsinwynu
-        SAJdi3Xm/KWdLm/xbBDoOsSa/StTQhLH9ZCDTb+N2lV2kPyw60jH3kfi9irQNfiVELRpSKwv0Q8jeQb0
-        1X2o+f/hSRjINlK86D0JbbXbNLNgF4FBaZocaoBI8VS+s01faxdp7gc+kUgkEolEooxW6x+uNUqiBCmB
-        vgAAAABJRU5ErkJggg==
 </value>
   </data>
 </root>
