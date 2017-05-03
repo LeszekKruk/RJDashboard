@@ -12,9 +12,9 @@ using System.Windows.Forms;
 
 namespace RJDashboard
 {
-    public partial class Information : MetroForm
+    public partial class ProblemSolution : MetroForm
     {
-        public Information(ErrorType type)
+        public ProblemSolution(ErrorType type)
         {
             InitializeComponent();
             ShowInfo(type);
