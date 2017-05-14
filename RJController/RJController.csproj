@@ -46,6 +46,7 @@
     <Compile Include="Dashboard\IDashboard.cs" />
     <Compile Include="DTO\DTOVariableContent.cs" />
     <Compile Include="DTO\DTOLabelSettings.cs" />
+    <Compile Include="Enums\DigitalOutputLevel.cs" />
     <Compile Include="Enums\DOutputControl.cs" />
     <Compile Include="Enums\EventType.cs" />
     <Compile Include="Enums\ErrorType.cs" />

@@ -33,6 +33,7 @@ namespace RJController
         private bool printSpeedErrorStopJob = true;
         private bool missingContentStopJob = true;
         private bool bufferFullStopJob = true;
+        private bool showResponseWithStatusOK = false;
 
         private bool _stopLine;
 
@@ -46,24 +47,13 @@ namespace RJController
 
             if (CheckReaPiLibrary() == true)
             {
-                //test API
+                
                 //rjConnection = new RJConnect((ReaPi.ConnectionIdentifier) 1, null);
                 rjConnection = new RJConnect();
 
+                //test API
                 rjConnection.IOConfiguration = "osb_hr_1.dio";
 
-                /*
-                for (int i = 0; i < 8; i++)
-                {
-                    DigitalOutput output = new DigitalOutput();
-                    output.Name = $"Out {i + 1}";
-                    output.Description = " - ";
-                    output.IsActive = true;
-                    output.DataField = i;
-
-                    rjConnection.AddOutput(i, output);
-                }*/
-                //test
                 RegisterConnection();
                 SetDigitalOutputsProperty();
             }
@@ -181,256 +171,32 @@ namespace RJController
             ReaPi.ResponseHandle response, 
             ReaPi.ConnectionIdentifier connection, 
             ReaPi.ECommandId commandid, 
-            ReaPi.EErrorCode errorcode, 
+            ReaPi.EErrorCode errorCode, 
             IntPtr context)
         {
+            int error = 0;
+            ErrorStatus errorStatus = ReaPi.GetErrorStatus(response, out error);
             switch (commandid)
             {
-                case ReaPi.ECommandId.CMD_CONNECT:
-                    break;
-                case ReaPi.ECommandId.CMD_DISCONNECT:
-                    break;
-                case ReaPi.ECommandId.CMD_SETJOB:
-                    break;
-                case ReaPi.ECommandId.CMD_STARTJOB:
-                    break;
-                case ReaPi.ECommandId.CMD_STOPJOB:
-                    break;
-                case ReaPi.ECommandId.CMD_SETLABELCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_SETDATETIME:
-                    break;
-                case ReaPi.ECommandId.CMD_GETCARTRIDGES:
-                    break;
                 case ReaPi.ECommandId.CMD_SUBSCRIBEJOBSET:
+                    CmdSubscribeJobSetResponse(true);
                     break;
                 case ReaPi.ECommandId.CMD_UNSUBSCRIBEJOBSET:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEJOBSTARTED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEJOBSTARTED:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEJOBSTOPPED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEJOBSTOPPED:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTTRIGGER:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTTRIGGER:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTSTART:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTSTART:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTEND:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTEND:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTREJECTED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTREJECTED:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTABORTED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTABORTED:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTSPEEDERROR:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTSPEEDERROR:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEINVALIDCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEINVALIDCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBESHAFTENCODERROTATION:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBESHAFTENCODERROTATION:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRODUCTSENSORCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRODUCTSENSORCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_CLEARJOB:
-                    break;
-                case ReaPi.ECommandId.CMD_STARTPURGE:
-                    break;
-                case ReaPi.ECommandId.CMD_LABELPREVIEW:
-                    break;
-                case ReaPi.ECommandId.CMD_GETTIMEZONE:
-                    break;
-                case ReaPi.ECommandId.CMD_SETTIMEZONE:
-                    break;
-                case ReaPi.ECommandId.CMD_GETDATETIME:
+                    CmdSubscribeJobSetResponse(false);
                     break;
                 case ReaPi.ECommandId.CMD_GETIOCONFIGURATION:
-                    break;
-                case ReaPi.ECommandId.CMD_SETIOCONFIGURATION:
-                    break;
-                case ReaPi.ECommandId.CMD_GETNETWORKCONFIG:
-                    break;
-                case ReaPi.ECommandId.CMD_SETNETWORKCONFIG:
-                    break;
-                case ReaPi.ECommandId.CMD_GETDEVICEINFO:
-                    break;
-                case ReaPi.ECommandId.CMD_GETLABELCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_GETLABELOBJECT:
-                    break;
-                case ReaPi.ECommandId.CMD_SETLABELOBJECT:
-                    break;
-                case ReaPi.ECommandId.CMD_GETCARTRIDGEPARAMETER:
-                    break;
-                case ReaPi.ECommandId.CMD_SETCARTRIDGEPARAMETER:
-                    break;
-                case ReaPi.ECommandId.CMD_BUILDLOGPACKAGE:
-                    break;
-                case ReaPi.ECommandId.CMD_FACTORYDEFAULTS:
-                    break;
-                case ReaPi.ECommandId.CMD_FIRMWAREUPDATE:
-                    break;
-                case ReaPi.ECommandId.CMD_LISTDIRECTORY:
-                    break;
-                case ReaPi.ECommandId.CMD_PUTFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_GETFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_DELETEFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_COPYFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_MOVEFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_LOCKFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_UNLOCKFILE:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEIOCONFIGURATIONSET:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEIOCONFIGURATIONSET:
-                    break;
-                case ReaPi.ECommandId.CMD_GETSYSTEMTIMEZONES:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBELABELPROPERTYCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBELABELPROPERTYCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBELASERUNITINFO:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBELASERUNITINFO:
-                    break;
-                case ReaPi.ECommandId.CMD_UPDATEFONTS:
-                    break;
-                case ReaPi.ECommandId.CMD_SETDEVICEPROPERTY:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBELABELEVENT:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBELABELEVENT:
-                    break;
-                case ReaPi.ECommandId.CMD_SYSTEMCOMMAND:
-                    break;
-                case ReaPi.ECommandId.CMD_GETLOGLEVEL:
-                    break;
-                case ReaPi.ECommandId.CMD_SETLOGLEVEL:
-                    break;
-                case ReaPi.ECommandId.CMD_GETPILOTLASERDISPLACEMENT:
-                    break;
-                case ReaPi.ECommandId.CMD_SETPILOTLASERDISPLACEMENT:
-                    break;
-                case ReaPi.ECommandId.CMD_GETIOINPUTLEVEL:
+                    CmdGetIOConfigurationResponse(ReaPi.GetIOConfigurationFilename(response, out error));
                     break;
                 case ReaPi.ECommandId.CMD_GETIOOUTPUTLEVEL:
+                    CmdGetOutputLevelResponse(response, new GetIOOutputLevelResponseEventArgs(connection, response, commandid, ReaPi.GetErrorStatus(response, out error)));
                     break;
                 case ReaPi.ECommandId.CMD_SETIOOUTPUTLEVEL:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEMISSINGCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEMISSINGCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_GETNOPRINTBUFFERMODE:
-                    break;
-                case ReaPi.ECommandId.CMD_SETNOPRINTBUFFERMODE:
-                    break;
-                case ReaPi.ECommandId.CMD_CONFIRMPRINTREJECT:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEPRINTREJECTCONFIRMED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEPRINTREJECTCONFIRMED:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEINSTALLATIONACTIVITY:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEINSTALLATIONACTIVITY:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEREADYFORNEXTCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEREADYFORNEXTCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_SETINSTALLATION:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEINSTALLATIONSET:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEINSTALLATIONSET:
-                    break;
-                case ReaPi.ECommandId.CMD_SETLABEL:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBELABELSET:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBELABELSET:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEIMAGESTART:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEIMAGESTART:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEIMAGEEND:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEIMAGEEND:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBENETWORKCONFIGCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBENETWORKCONFIGCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_GETNTPCONFIG:
-                    break;
-                case ReaPi.ECommandId.CMD_SETNTPCONFIG:
-                    break;
-                case ReaPi.ECommandId.CMD_ADDLABELCONTENT:
-                    break;
-                case ReaPi.ECommandId.CMD_DEINSTALLADDON:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBENETWORKCONFIGCHANGING:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBENETWORKCONFIGCHANGING:
-                    break;
-                case ReaPi.ECommandId.CMD_SETNETWORKCONFIGWITHNTPCONFIG:
-                    break;
-                case ReaPi.ECommandId.CMD_GETPRODUCTSENSORLEVEL:
-                    break;
-                case ReaPi.ECommandId.CMD_SETCONTENTBUFFERCONTROL:
-                    break;
-                case ReaPi.ECommandId.CMD_GETCONTENTBUFFERCONTROL:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEBUFFERUNDERRUN:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEBUFFERUNDERRUN:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBEBUFFERFULL:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBEBUFFERFULL:
-                    break;
-                case ReaPi.ECommandId.CMD_DEVICEDEVELOPFEATURES:
-                    break;
-                case ReaPi.ECommandId.CMD_SUBSCRIBECARTRIDGEPARAMETERCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_UNSUBSCRIBECARTRIDGEPARAMETERCHANGED:
-                    break;
-                case ReaPi.ECommandId.CMD_GETPRODUCTIONDATA:
-                    break;
-                case ReaPi.ECommandId.CMD_REA:
-                    break;
-                case ReaPi.ECommandId.CMD_NONE:
+                    CmdSetOutputLevelResponse();
                     break;
                 default:
                     break;
             }
+            ShowResponseError(response, connection, commandid.ToString(), errorCode);
         }
 
         #region PRIVATE Methods
@@ -690,6 +456,37 @@ namespace RJController
             }
         }
 
+        private void SetDigitalOutputLevel(DOutputControl outputType, DigitalOutputLevel level)
+        {
+            int outputNumber = (int)outputType;
+            int outputMask = (int)Math.Pow(2, outputNumber);
+
+            RJSetOutputLevel(outputMask, (int)level);
+        }
+
+        private DigitalOutputLevel GetOutputLevelToBeSetForDataField(DOutputControl outputType, double printedRecord)
+        {
+            DigitalOutputLevel level = DigitalOutputLevel.Low;
+            int outputNumber = (int)outputType;
+
+            try
+            {
+                int columnNumber = rjConnection.Outputs[outputNumber].DataField;
+
+                if (columnNumber != -1)
+                {
+                    List<string> record = database.GetRecordWithKey(printedRecord);
+                    string columnValue = record[columnNumber];
+
+                    if (columnValue != "" && columnValue != null)
+                        level = DigitalOutputLevel.High;
+                }
+            }
+            catch (Exception) { }
+
+            return level;
+        }
+
         #endregion
 
         #region OnEvent Methods
@@ -741,13 +538,13 @@ namespace RJController
         private void OnJobStartedEvent()
         {
             UpdateDashboard(EventType.JOBSTARTED);
-            //SetOutputLevel(OutputTypeReaction.JobStatus, OutputLevel.High);
+            SetDigitalOutputLevel(DOutputControl.JOB_STATUS, DigitalOutputLevel.High);
         }
 
         private void OnJobStoppedEvent()
         {
             UpdateDashboard(EventType.JOBSTOPPED);
-            //SetOutputLevel(OutputTypeReaction.JobStatus, OutputLevel.Low);
+            SetDigitalOutputLevel(DOutputControl.JOB_STATUS, DigitalOutputLevel.Low);
         }
 
         private void OnJobBufferFullEvent(ErrorStatus errorStatus)
@@ -842,8 +639,8 @@ namespace RJController
             {
                 Record record = _queueRecords.First();
 
-                //OutputLevel level = GetOutputLevelToBeSetForAssignedColumn(OutputTypeReaction.ControlStacker, record.Id);
-                //SetOutputLevel(OutputTypeReaction.ControlStacker, level);
+                DigitalOutputLevel level = GetOutputLevelToBeSetForDataField(DOutputControl.SET_STACKER, record.Id);
+                SetDigitalOutputLevel(DOutputControl.SET_STACKER, level);
 
                 _queueRecords.Dequeue();
             }
@@ -855,7 +652,6 @@ namespace RJController
                 RJStopJob();
                 ShowProblemSolution(ErrorType.printedLastRecord);
             }
-
         }
 
         private void OnJobPrintAbortedEvent()
@@ -896,6 +692,74 @@ namespace RJController
 
         #endregion
 
+        #region OnResponse Methods
+
+        private void ShowResponseError(
+            ReaPi.ResponseHandle response,
+            ReaPi.ConnectionIdentifier connectionId,
+            string command,
+            ReaPi.EErrorCode error)
+        {
+            if (error == ReaPi.EErrorCode.OK)
+            {
+                if (showResponseWithStatusOK == true)
+                    SendToDashboard(MessageType.EVENT,$"{command}", null, null);
+            }
+            else
+            {
+                int err = 0;
+                string lastError = command + ", Błąd: " + error;
+                string errorMessage = ReaPi.GetErrorMessage(response, out err);
+                string errorDomain = ReaPi.GetErrorDomain(response, out err).ToString();
+                string errorCode = ReaPi.GetErrorCode(response, out err).ToString();
+
+                SendToDashboard(MessageType.ERROR, lastError, errorCode + " / " + errorDomain, errorMessage);
+            }
+        }
+
+
+        private void CmdGetIOConfigurationResponse(string ioFileName)
+        {
+            SendToDashboard(MessageType.LOG, "IO: " + ioFileName, null, null);
+        }
+
+        private void CmdSubscribeJobSetResponse(bool subscribed)
+        {
+            SendToDashboard(MessageType.LOG, "Subscribtion JobSet", "Event successful " + (subscribed ? "subscribed" : "unsubscribed"), null);
+        }
+
+        private void CmdSetOutputLevelResponse()
+        {
+            //aktualizuje stan wyjsc
+            RJGetOutputLevel();
+        }
+
+        private void CmdGetOutputLevelResponse(ReaPi.ResponseHandle response, GetIOOutputLevelResponseEventArgs getIOOutputLevelResponseEventArgs)
+        {
+            int error = 0;
+            List<GetIOOutputLevelResponseEventArgs.IOOutput> listIOOutputs = new List<GetIOOutputLevelResponseEventArgs.IOOutput>();
+            int count = ReaPi.GetNumberOfOutputs(response, out error);
+            for (int i = 1; i <= count; i++)
+            {
+                GetIOOutputLevelResponseEventArgs.IOOutput ioOutput = new GetIOOutputLevelResponseEventArgs.IOOutput();
+                ioOutput.Index = i;
+                ioOutput.Level = ReaPi.GetIOOutputLevelValue(response, i, out error);
+
+                listIOOutputs.Add(ioOutput);
+            }
+
+            List<bool> outputsState = new List<bool>();
+            for (int i = 0; i < getIOOutputLevelResponseEventArgs.IOOutputs.Count; i++)
+            {
+                outputsState.Add((bool)getIOOutputLevelResponseEventArgs.IOOutputs[i].Level);
+            }
+            try
+            {
+                _view.UpdateOutputsState(outputsState);
+            }
+            catch (Exception) { }
+        }
+        #endregion
 
         #region PUBLIC Methods
         public void SetPrinterControlParameters(bool printTrigger, bool invalidContent, bool printReject, bool printAborted, bool printSpeedError, bool missingContent, bool bufferFull)
@@ -962,21 +826,38 @@ namespace RJController
         {
             OnJobSetEvent((ReaPi.ConnectionIdentifier)1, 1, $"C:\\temp\\_ReaTest\\jobs\\{jobName}");
             UpdateDashboard(EventType.JOBSET);
+
+            if (rjConnection.ConnectionID <= 0)
+                return;
+
+            //ReaPi.SetJob(rjConnection.ConnectionID, 1, jobName);
         }
 
         public void RJClearJob()
         {
+            if (rjConnection.ConnectionID <= 0)
+                return;
 
+            ReaPi.ClearJob(rjConnection.ConnectionID, 1);
         }
 
         public void RJStopJob()
         {
             UpdateDashboard(EventType.JOBSTOPPED);
+
+            if (rjConnection.ConnectionID <= 0)
+                return;
+
+            //ReaPi.StopJob(rjConnection.ConnectionID, 1);
         }
 
         public void RJStartJob()
         {
             UpdateDashboard(EventType.JOBSTARTED);
+            if (rjConnection.ConnectionID <= 0)
+                return;
+
+            //ReaPi.StartJob(rjConnection.ConnectionID, 1);
         }
 
         public void RJDisconnect()
@@ -993,9 +874,28 @@ namespace RJController
             }
         }
 
+        public void RJSetOutputLevel(int output, int state)
+        {
+            if (rjConnection.ConnectionID <= 0)
+                return;
+
+            //ReaPi.SetIOOutputLevel(rjConnection.ConnectionID, output, state);
+        }
+
+        public void RJGetOutputLevel()
+        {
+            if (rjConnection.ConnectionID <= 0)
+                return;
+
+            //ReaPi.GetIOOutputLevel(rjConnection.ConnectionID);
+        }
+
         public void RJSetIOConfiguration(string fileName)
         {
+            if (rjConnection.ConnectionID <= 0)
+                return;
 
+            ReaPi.SetIOConfiguration(rjConnection.ConnectionID, rjConnection.Job.JobId, fileName);
         }
 
         public List<DTOLabelSettings> GetDTOLabelSettings()
@@ -1028,8 +928,7 @@ namespace RJController
             //}
 
             //Przypisuje ustawienia etykiety
-            //DODA AUTOMATYCZNY ODCZYT ilosci kolumn
-            rjConnection.Job.AssignSettings(listDTO, 10);
+            rjConnection.Job.AssignSettings(listDTO, database.GetHeadersCount());
         }
 
         public List<Header> GetHeaders()
@@ -1112,18 +1011,32 @@ namespace RJController
             return rjConnection.GetOuputName(outputNumber);
         }
 
-        public void AssignOutputToDataField(int outputNumber, int dataField)
+        public void AssignOutputToDataField(int outputNumber, int labelRow)
         {
-            if (outputNumber > 0)
+            //czyszcze wczesniejsze ustawienia wyjscia - jedno wyjscie do jednej kolumny
+            foreach (var item in rjConnection.Job.VariableContents)
             {
+                if (item.OutputControl == outputNumber)
+                    item.OutputControl = -1;
+            }                       
+            
+            int dataField = rjConnection.Job.VariableContents[labelRow].DataField;
+
+            //nie można przypisac wyjscia bez kolumny danych
+            if (dataField > 0)
+            {
+                rjConnection.Job.VariableContents[labelRow].OutputControl = outputNumber;
                 rjConnection.Outputs[outputNumber].DataField = dataField;
-            }            
-            rjConnection.Job.VariableContents[dataField].OutputControl = outputNumber;
+            }
         }
 
-        public void AssignDataFieldToContent(int dataField,  int labelContentNumber)
+        public void AssignDataFieldToContent(int dataField,  int labelRow)
         {
-            rjConnection.Job.VariableContents[labelContentNumber].DataField = dataField;
+            rjConnection.Job.VariableContents[labelRow].DataField = dataField;
+
+            //usuwam wyjscie jak usuwana jest kolumna z danymi
+            if (rjConnection.Job.VariableContents[labelRow].OutputControl > 0)
+                rjConnection.Job.VariableContents[labelRow].OutputControl = -1;
         }
 
         public bool LoadDatabase(string fileName)
