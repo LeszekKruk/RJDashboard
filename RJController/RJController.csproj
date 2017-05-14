@@ -44,18 +44,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dashboard\IDashboard.cs" />
+    <Compile Include="DTO\DTOVariableContent.cs" />
+    <Compile Include="DTO\DTOLabelSettings.cs" />
+    <Compile Include="Enums\EventType.cs" />
     <Compile Include="Enums\ErrorType.cs" />
+    <Compile Include="Enums\MessageType.cs" />
+    <Compile Include="IO\DigitalOutput.cs" />
+    <Compile Include="Job\Record.cs" />
     <Compile Include="Label\ILabelObject.cs" />
-    <Compile Include="Job\IVariableDataLabel.cs" />
+    <Compile Include="Job\IVariableContent.cs" />
     <Compile Include="Label\LabelLayout.cs" />
-    <Compile Include="RJConnection.cs" />
+    <Compile Include="Label\LabelSettings.cs" />
+    <Compile Include="Model\Database\Database.cs" />
+    <Compile Include="Model\Database\Header.cs" />
+    <Compile Include="RJConnect.cs" />
     <Compile Include="RJPaths.cs" />
     <Compile Include="Enums\ContentType.cs" />
     <Compile Include="Job\RJJob.cs" />
     <Compile Include="Label\LabelObject.cs" />
     <Compile Include="Label\IObjectContent.cs" />
     <Compile Include="Label\ObjectContent.cs" />
-    <Compile Include="Job\VariableDataLabel.cs" />
+    <Compile Include="Job\VariableContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RJDevice.cs" />
   </ItemGroup>

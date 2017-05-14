@@ -1,4 +1,5 @@
-﻿using RJPaths;
+﻿using RJController.Job;
+using RJPaths;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,19 +12,19 @@ namespace RJController.Label
 {
     public class LabelLayout
     {
-        private List<IVariableDataLabel> _variableObjects;
+        private List<IVariableContent> _viariableContents;
 
         public LabelLayout(string jobFile)
         {
-            _variableObjects = new List<IVariableDataLabel>();
+            _viariableContents = new List<IVariableContent>();
             GetLabelsForJob(jobFile);
         }
 
-        public List<IVariableDataLabel> VariableObjects
+        public List<IVariableContent> VariableContents
         {
             get
             {
-                return _variableObjects;
+                return _viariableContents;
             }
         }
 
@@ -82,7 +83,7 @@ namespace RJController.Label
                                              }
                               };
 
-                GetVariableContents(groupName, _variableObjects, objects);
+                GetVariableContents(groupName, _viariableContents, objects);
             }
             catch (Exception)
             {
@@ -90,7 +91,7 @@ namespace RJController.Label
             }
         }
 
-        private static void GetVariableContents(string groupName, List<IVariableDataLabel> _variableObjects, IEnumerable<LabelObject> objects)
+        private static void GetVariableContents(string groupName, List<IVariableContent> _viariableContent, IEnumerable<LabelObject> objects)
         {
             foreach (var obj in objects)
             {
@@ -98,7 +99,7 @@ namespace RJController.Label
                 {
                     if (content.ContentType == "Variable")
                     {
-                        IVariableDataLabel vdl = new VariableDataLabel();
+                        IVariableContent vdl = new VariableContent();
 
                         vdl.GroupName = groupName;
                         vdl.ObjectName = obj.ObjectName;
@@ -107,7 +108,7 @@ namespace RJController.Label
                         vdl.OutputControl = -1;
                         vdl.DataField = -1;
 
-                        _variableObjects.Add(vdl);
+                        _viariableContent.Add(vdl);
                     }
                 }
             }

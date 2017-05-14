@@ -7,6 +7,7 @@ namespace RJPaths
         static public string JOB_XML_PATH_Label = "//REA-JET/Job/Labels/Label";
         static public string LABEL_XML_PATH_Layout = "//REA-JET/Label/Layout";
         static public string LABEL_XML_PATH_Object = "//REA-JET/Label/Layout/Object";
+        static public string LABEL_SETTINGS = "//LAYOUT/OBJECT";
     }
 
     public struct NameFolders

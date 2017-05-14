@@ -6,81 +6,47 @@ using System.Xml;
 using System.Xml.XPath;
 using RJPaths;
 using RJController.Label;
+using RJController.DTO;
 
 namespace RJController.Job
 {
     public class RJJob
     {
-        private int _jobId;
-        private string _jobFile;
-        private string _installation;
-        private List<IVariableDataLabel> _variableDataLabel;
+        public int JobId { get; set; }
+        public string JobFile { get; set; }
+        public string Installation { get; set; }
+        public List<IVariableContent> VariableContents { get; set; }
+
+        public RJJob() { }
 
         public RJJob(int jobId, string jobFile)
         {
             if (jobId <= 0)
             {
-                throw new System.ArgumentException("Parameter JobId must be > null");
+                throw new System.ArgumentException("Parameter JobId musi być większy od 0.");
             }
 
             JobId = jobId;
             JobFile = Path.GetFileName(jobFile);
             Installation = GetInstallation(jobFile);
-
-            LabelLayout ll = new LabelLayout(jobFile);
-            LabelManagement = ll.VariableObjects;
-
+            VariableContents = new LabelLayout(jobFile).VariableContents;
         }
 
-        public int JobId {
-            get {
-                return _jobId;
-            }
-            set {
-                _jobId = value;
-            }
-        }
-
-        public string JobFile {
-            get
-            {
-                return _jobFile;
-            }
-            set
-            {
-                _jobFile = value;
-            }
-        }
-
-        public string Installation
+        public ISet<string> GetGroups()
         {
-            get
+            ISet<string> _groups = new HashSet<string>();
+            foreach (var item in VariableContents)
             {
-                return _installation;
+                _groups.Add(item.GroupName);
             }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new System.ArgumentException("Parameter can't be null");
-                }
-                else
-                {
-                    _installation = value;
-                }                
-            }
+            return _groups;
         }
 
-        public List<IVariableDataLabel> LabelManagement
+        public void ClearDataFields()
         {
-            get
+            foreach (var item in VariableContents)
             {
-                return _variableDataLabel;
-            }
-
-            set
-            {
-                _variableDataLabel = value;
+                item.DataField = -1;
             }
         }
 
@@ -108,6 +74,44 @@ namespace RJController.Job
             }
 
             return fileName;
+        }
+
+        public void AssignSettings(List<DTOLabelSettings> dto, int maxFields)
+        {
+            for (int i = 0; i < VariableContents.Count; i++)
+            {
+                for (int j = 0; j < dto.Count; j++)
+                {
+                    if (VariableContents[i].GroupName == dto[i].GroupName && 
+                        VariableContents[i].ObjectName == dto[i].ObjectName && 
+                        VariableContents[i].ContentName == dto[i].ContentName)
+                    {
+                        //sprawdzam czy kolumna wykracza poza zakres bazy danych
+                        if (dto[i].DataField <= maxFields)
+                        {
+                            VariableContents[i].DataField = dto[i].DataField;
+                        }
+                        else
+                        {
+                            VariableContents[i].DataField = -1;
+                        }
+                        //sprawdzam czy zakres wyjsc miesci sie pomiedzy 0 - 7
+                        if (dto[i].OutputControl >= 0 && dto[i].OutputControl < 8)
+                        {
+                            VariableContents[i].OutputControl = dto[i].OutputControl;
+                        }
+                        else
+                        {
+                            VariableContents[i].OutputControl = -1;
+                        }        
+                    }
+                }
+            }
+        }
+
+        public List<IVariableContent> GetVariableContents()
+        {
+            return VariableContents;
         }
     }
 }

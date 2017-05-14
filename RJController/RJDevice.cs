@@ -1,10 +1,17 @@
 ﻿using ReaPiSharp;
 using RJController.Dashboard;
+using RJController.DTO;
 using RJController.Enums;
+using RJController.IO;
 using RJController.Job;
+using RJController.Label;
+using RJController.Model.Database;
 using RJLogger;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace RJController
@@ -15,66 +22,52 @@ namespace RJController
         static private ReaPi.responseCallbackPtr _responseCallback;
         static private ReaPi.eventCallbackPtr _eventCallback;
 
-        IDashboard _view;
+        private Queue<Record> _queueRecords = new Queue<Record>();
 
-        public RJJob job;
-        public RJConnection rjConnection;
+        IDashboard _view;
+        private bool isPrintTrigger = true;
+        private bool invalidContentStopJob = true;
+        private bool printRejectStopJob = true;
+        private bool printAbortedStopJob = true;
+        private bool printSpeedErrorStopJob = true;
+        private bool missingContentStopJob = true;
+        private bool bufferFullStopJob = true;
+
+        private bool _stopLine;
+
+        private RJConnect rjConnection;
+        private Database database;
 
         public RJDevice(IDashboard view)
         {
             _view = view;
-
-            //test API
-            job = new RJJob(1, "C:\\temp\\_ReaTest\\jobs\\test_LK.job");
+            database = new Database();        
 
             if (CheckReaPiLibrary() == true)
             {
-                rjConnection = new RJConnection((ReaPi.ConnectionIdentifier) 1, "test",null);
-                rjConnection.Job = job;
+                //test API
+                //rjConnection = new RJConnect((ReaPi.ConnectionIdentifier) 1, null);
+                rjConnection = new RJConnect();
+
                 rjConnection.IOConfiguration = "osb_hr_1.dio";
 
-                _connectionCallback = new ReaPi.connectionCallbackPtr(OnConnectionCallback);
-
-                ReaPi.EErrorCode tmpError = ReaPi.RegisterConnectionCallback(_connectionCallback, new IntPtr(0));
-
-                if (tmpError == ReaPi.EErrorCode.OK)
+                for (int i = 0; i < 8; i++)
                 {
-                    _view.DisplayLogsAndErrors("Status OK - ReaPi.RegisterConnectionCallback()", "", "");
+                    DigitalOutput output = new DigitalOutput();
+                    output.Name = $"Out {i + 1}";
+                    output.Description = " - ";
+                    output.IsActive = true;
+                    output.DataField = i;
+
+                    rjConnection.AddOutput(i, output);
                 }
-                else
-                {
-                    _view.DisplayLogsAndErrors("Błąd - ReaPi.RegisterConnectionCallback()", tmpError.ToString(), "");
-                }
+                //test
+                RegisterConnection();
             }
             else
             {
                 _view.ShowProblemSolution(ErrorType.libraryError);
             }        
-        }
-
-        private bool CheckReaPiLibrary()
-        {
-            string log = "";
-            bool library = true;
-            try
-            {
-                log = "Informacja o bibliotece ReaPi.dll" + Environment.NewLine;
-                log += "ReaPi Info: " + ReaPi.GetLibInfo() + Environment.NewLine;
-                log += "Revision: " + ReaPi.GetRevision();
-            }
-            catch (Exception e)
-            {
-                log = "Brak bibliotek ReaPi.dll";
-                AppLogger.GetLogger().Fatal(log, e);
-
-                library = false;
-            }
-            finally
-            {
-                DisplayMessage(log, null, null);
-            }
-
-            return library;
         }
 
         private void OnConnectionCallback(
@@ -89,13 +82,11 @@ namespace RJController
                 {
                     if (errorCode != ReaPi.EErrorCode.OK)
                     {
-                        _view.DisplayLogsAndErrors("OnReaPiConnectionCallbackPtr() for EConnState.CONNECT", errorCode.ToString(), "");
+                        SendToDashboard(MessageType.ERROR, "Błąd podczas połączenia ze sterownikiem!", errorCode.ToString(), "OnConnectionCallback");
                         return;
                     }
 
-                    _view.DisplayEvents("Połączenie " + connectionId + " nawiązane");
-
-                    rjConnection = new RJConnection(connectionId, connectionId.ToString(), null);
+                    rjConnection = new RJConnect(connectionId, null);
 
                     _responseCallback = new ReaPi.responseCallbackPtr(OnResponseCallback);
                     ReaPi.RegisterResponseCallback(connectionId, _responseCallback, context);
@@ -107,108 +98,88 @@ namespace RJController
                 }
                 else
                 {
-                    _view.DisplayLogsAndErrors("Brak możliwości połączenia", null, null );
+                    SendToDashboard(MessageType.ERROR, $"Nieprawidłowy IdConnection: <{connectionId}>.", null, "OnConnectionCallback");
                     _view.ShowProblemSolution(ErrorType.errorConnection);
                 }
             }
             else if (state == ReaPi.EConnState.DISCONNECT)
             {
                 if (errorCode != ReaPi.EErrorCode.OK)
-                {
-                    _view.DisplayLogsAndErrors("OnReaPiConnectionCallbackPtr() for EConnState.DISCONNECT", errorCode.ToString(),null);
-                }
+                    SendToDashboard(MessageType.ERROR, "Błąd podczas rozłączenia ze sterownikiem!", errorCode.ToString(), "OnConnectionCallback");
 
-                //_infoReaPiLib.Connections.Remove(connectionId);
-                _view.DisplayLogsAndErrors("Połączenie <" + connectionId + "> zamknięte", null, null);
-
-                OnDisconnect();
+                OnDisconnect(connectionId);
             }
             else if (state == ReaPi.EConnState.CONNECTIONERROR)
             {
-                _view.DisplayLogsAndErrors("Połączenie <" + connectionId + "> zamknięte z błędem ", errorCode.ToString(), null);
-                //_view.UpdateControls("DISCONNECTED");
+                SendToDashboard(MessageType.ERROR, "Błąd podczas połączenia <" + connectionId + ">.", errorCode.ToString(), "OnConnectionCallback");
+                UpdateDashboard(EventType.DISCONNECT);
+
                 _view.ShowProblemSolution(ErrorType.errorConnection);
             }
         }
 
-        private void OnEventCallback(ReaPi.ResponseHandle response, ReaPi.ConnectionIdentifier connection, ReaPi.EEventId eventid, IntPtr context)
+        private void OnEventCallback(
+            ReaPi.ResponseHandle response, 
+            ReaPi.ConnectionIdentifier connection, 
+            ReaPi.EEventId eventId, 
+            IntPtr context)
         {
-            switch (eventid)
+            int error = 0;
+
+            SendToDashboard(MessageType.EVENT, $"{eventId.ToString()}", null, null);
+
+            switch (eventId)
             {
                 case ReaPi.EEventId.JOBSET:
+                    OnJobSetEvent(connection, ReaPi.GetJobId(response, out error), ReaPi.GetJobFilename(response, out error));
                     break;
                 case ReaPi.EEventId.JOBSTARTED:
+                    OnJobStartedEvent();
                     break;
                 case ReaPi.EEventId.JOBSTOPPED:
+                    OnJobStoppedEvent();
                     break;
                 case ReaPi.EEventId.PRINTTRIGGER:
+                    OnJobPrintTriggerEvent(eventId);
                     break;
                 case ReaPi.EEventId.PRINTSTART:
+                    OnJobPrintStartEvent(eventId);
                     break;
                 case ReaPi.EEventId.PRINTREJECTED:
+                    OnJobPrintRejectEvent();
                     break;
                 case ReaPi.EEventId.PRINTEND:
+                    OnJobPrintEndEvent();
                     break;
                 case ReaPi.EEventId.PRINTABORTED:
+                    OnJobPrintAbortedEvent();
                     break;
                 case ReaPi.EEventId.PRINTSPEEDERROR:
+                    OnJobPrintSpeedErrorEvent();
                     break;
                 case ReaPi.EEventId.INVALIDCONTENT:
-                    break;
-                case ReaPi.EEventId.CARTRIDGECHANGED:
-                    break;
-                case ReaPi.EEventId.SHAFTENCODERROTATION:
-                    break;
-                case ReaPi.EEventId.PRODUCTSENSORCHANGED:
-                    break;
-                case ReaPi.EEventId.FIRMWAREUPGRADEPROGRESS:
+                    OnInvalidContentEvent(ReaPi.GetGroupname(response, out error));
                     break;
                 case ReaPi.EEventId.IOCONFIGURATIONSET:
-                    break;
-                case ReaPi.EEventId.LABELPROPERTYCHANGED:
-                    break;
-                case ReaPi.EEventId.LASERUNITINFO:
-                    break;
-                case ReaPi.EEventId.PRINTSTATUS:
-                    break;
-                case ReaPi.EEventId.LABELEVENT:
-                    break;
-                case ReaPi.EEventId.BUILDLOGPACKAGEPROGRESS:
-                    break;
-                case ReaPi.EEventId.PURGECOMPLETED:
+                    OnIOConfigurationSetEvent(ReaPi.GetIOConfigurationFilename(response, out error));
                     break;
                 case ReaPi.EEventId.MISSINGCONTENT:
-                    break;
-                case ReaPi.EEventId.PRINTREJECTCONFIRMED:
-                    break;
-                case ReaPi.EEventId.INSTALLATIONACTIVITY:
-                    break;
-                case ReaPi.EEventId.READYFORNEXTCONTENT:
-                    break;
-                case ReaPi.EEventId.INSTALLATIONSET:
-                    break;
-                case ReaPi.EEventId.LABELSET:
-                    break;
-                case ReaPi.EEventId.IMAGESTART:
-                    break;
-                case ReaPi.EEventId.IMAGEEND:
-                    break;
-                case ReaPi.EEventId.NETWORKCONFIGCHANGED:
-                    break;
-                case ReaPi.EEventId.NETWORKCONFIGCHANGING:
-                    break;
-                case ReaPi.EEventId.BUFFERUNDERRUN:
+                    OnMissingContentEvent(ReaPi.GetGroupname(response, out error));
                     break;
                 case ReaPi.EEventId.BUFFERFULL:
-                    break;
-                case ReaPi.EEventId.CARTRIDGEPARAMETERCHANGED:
+                    OnJobBufferFullEvent(ReaPi.GetJobErrorStatus(response, out error));
                     break;
                 default:
                     break;
             }
         }
 
-        private void OnResponseCallback(ReaPi.ResponseHandle response, ReaPi.ConnectionIdentifier connection, ReaPi.ECommandId commandid, ReaPi.EErrorCode errorcode, IntPtr context)
+        private void OnResponseCallback(
+            ReaPi.ResponseHandle response, 
+            ReaPi.ConnectionIdentifier connection, 
+            ReaPi.ECommandId commandid, 
+            ReaPi.EErrorCode errorcode, 
+            IntPtr context)
         {
             switch (commandid)
             {
@@ -459,31 +430,444 @@ namespace RJController
             }
         }
 
+        #region PRIVATE Methods
+
+        private void RegisterConnection()
+        {
+            _connectionCallback = new ReaPi.connectionCallbackPtr(OnConnectionCallback);
+            ReaPi.EErrorCode tmpError = ReaPi.RegisterConnectionCallback(_connectionCallback, new IntPtr(0));
+
+            if (tmpError == ReaPi.EErrorCode.OK)
+            {
+                SendToDashboard(MessageType.LOG, "RegisterConnectionCallback() - Status.OK", "", "");
+            }
+            else
+            {
+                SendToDashboard(MessageType.LOG, "RegisterConnectionCallback() - Status.Error", tmpError.ToString(), "");
+            }
+        }
+
         private void OnConnect(ReaPi.ConnectionIdentifier connectionId)
         {
-            string lastError;
+            string lastError = "";
             rjConnection.ProtocolVersion = new Version(ReaPi.GetProtocolVersion(rjConnection.ConnectionID));
 
             lastError = ReaPi.SubscribeJobSet(rjConnection.ConnectionID, 1).ToString();
             lastError = ReaPi.SubscribeIOConfigurationSet(rjConnection.ConnectionID, 1).ToString();
-
-            _view.DisplayLogsAndErrors("Połączenie: OK", " Wskaźnik połączenia: " + rjConnection.ConnectionID.ToString(), null);
-
-            //_view.UpdateControls("CONNECTED");
-
             lastError = ReaPi.GetIOOutputLevel(rjConnection.ConnectionID).ToString();
 
-            _view.DisplayLogsAndErrors(lastError, null, null);
+            //SetOutputLevel(OutputTypeReaction.ControlDivert, OutputLevel.Low);
+            //SetOutputLevel(OutputTypeReaction.ControlStacker, OutputLevel.Low);
+
+            SendToDashboard(MessageType.LOG, "Połączenie: OK", $" Wskaźnik połączenia: {rjConnection.ConnectionID.ToString()}.", null);
+            SendToDashboard(MessageType.ERROR, lastError, null, null);
+            UpdateDashboard(EventType.CONNECT);
         }
 
-        private void DisplayMessage(string message, string a, string b)
+        private void OnDisconnect(ReaPi.ConnectionIdentifier connectionId)
         {
-            _view.DisplayLogsAndErrors(message, a, b);
+            rjConnection.ConnectionID = ReaPi.ConnectionIdentifier.INVALID_CONNECTION;
+
+            SendToDashboard(MessageType.LOG, $"Połączenie <{connectionId}> zamknięte.", null, null);
+            UpdateDashboard(EventType.DISCONNECT);
         }
 
-        private void OnDisconnect()
+        private void SendToDashboard(MessageType type, string log, string errorCode, string errorMessage)
         {
+            switch (type)
+            {
+                case MessageType.EVENT:
+                    _view.DisplayEvents(log);
+                    break;
+                case MessageType.LOG:
+                    _view.DisplayLogsAndErrors("Log: " + log, errorCode, errorMessage);
+                    break;
+                case MessageType.ERROR:
+                    _view.DisplayLogsAndErrors("Error: " + log, errorCode, errorMessage);
+                    break;
+                default:
+                    break;
+            }
+        }
 
+        private void UpdateDashboard(EventType rjEvent)
+        {
+            _view.UpdateDashboard(rjEvent);
+        }
+
+        private void ShowProblemSolution(ErrorType type)
+        {
+            _view.ShowProblemSolution(type);
+        }
+
+        private bool CheckReaPiLibrary()
+        {
+            string log = "";
+            bool library = true;
+            try
+            {
+
+                log = "Informacja o bibliotece ReaPi.dll" + Environment.NewLine;
+                log += "ReaPi Info: " + ReaPi.GetLibInfo() + Environment.NewLine;
+                log += "Revision: " + ReaPi.GetRevision();
+            }
+            catch (Exception e)
+            {
+                log = "Brak bibliotek ReaPi.dll";
+                AppLogger.GetLogger().Fatal(log, e);
+
+                library = false;
+            }
+            finally
+            {
+                SendToDashboard(MessageType.LOG, log, null, null);
+            }
+
+            return library;
+        }
+
+        private void PrepareNextRecord(ReaPi.EEventId eventId)
+        {
+            if ((isPrintTrigger == true && eventId == ReaPi.EEventId.PRINTTRIGGER) || (isPrintTrigger == false && eventId == ReaPi.EEventId.PRINTSTART))
+            {
+                SendRecordToPrint(database.ActualRecord + 1);
+            }
+        }
+
+        private void SendRecordToPrint(double actualRecord)
+        {
+            _stopLine = false;
+
+            database.PreviousRecord = database.ActualRecord;
+            database.ActualRecord = actualRecord;
+
+            if (actualRecord > database.MaxRecords())
+            {
+                _stopLine = true;
+                return;
+            }
+
+            List<string> valueContent = GetContentToPrint();
+
+            List <DTOVariableContent> labelContents = new List<DTOVariableContent>();
+
+            for (int i = 0; i < rjConnection.Job.VariableContents.Count; i++)
+            {
+                DTOVariableContent dtoVC = new DTOVariableContent(
+                    rjConnection.Job.VariableContents[i].GroupName,
+                    rjConnection.Job.VariableContents[i].ObjectName,
+                    rjConnection.Job.VariableContents[i].ContentName,
+                    valueContent[i]
+                    );
+                labelContents.Add(dtoVC);
+            }
+            SetLabelContent(labelContents);
+        }
+
+        private List<string> GetContentToPrint()
+        {
+            List<string> csvContent = new List<string>();
+            List<string> record = database.GetActualRecord();
+
+            for (int i = 0; i < rjConnection.Job.VariableContents.Count(); i++)
+            {
+                int columnNumber = rjConnection.Job.VariableContents[i].DataField;
+                if (columnNumber == -1)
+                {
+                    csvContent.Add("");
+                }
+                else
+                {
+                    csvContent.Add(record[columnNumber]);
+                }
+
+            }
+
+            return csvContent;
+        }
+
+        private void SetLabelContent(List<DTOVariableContent> dtoVC)
+        {
+            try
+            {
+                if (rjConnection.ConnectionID <= 0)
+                    return;
+
+                ReaPi.EErrorCode error = ReaPi.RemoveLabelContent(rjConnection.LabelContentHandle);
+                ReaPi.LabelContentHandle labelContentHandle = ReaPi.CreateLabelContent();
+
+                rjConnection.LabelContentHandle = labelContentHandle;
+
+                if (labelContentHandle >= (ReaPi.LabelContentHandle)0)
+                {
+                    foreach (var lp in dtoVC)
+                    {
+                        error = ReaPi.PrepareLabelContent(labelContentHandle, 1, lp.GroupName, lp.ObjectName, lp.ContentName, lp.ContentValue);
+
+                        if (error != ReaPi.EErrorCode.OK)
+                            SendToDashboard(MessageType.LOG, "Error: Nie można przygotować danych dla pola: {lp.ContentName}", error.ToString(), null);
+                    }
+
+                    ReaPi.ResponseHandle response = ReaPi.SetLabelContent(rjConnection.ConnectionID, labelContentHandle);
+
+                    if (response < 0)
+                    {
+                        SendToDashboard(MessageType.LOG, "Error: Nie można wysłać danych dla etykiety", null, null);
+                    }
+                    else
+                    {
+                        SendToDashboard(MessageType.LOG, $"Wysłano zawartość rekordu: {database.ActualRecord.ToString()}", null, null);
+
+                        Record record = new Record();
+                        record.Id = database.ActualRecord;
+                        record.IsError = false;
+
+                        _queueRecords.Enqueue(record);
+                    }
+                }
+                else
+                {
+                    SendToDashboard(MessageType.LOG, "Error: Nie można przygotować danych dla etykiety", null, null);
+                }
+            }
+            catch (FormatException ex)
+            {
+                SendToDashboard(MessageType.ERROR, "Function SetLabelContent()", ex.ToString(), ex.Message.ToString());
+            }
+        }
+
+        private void PrepareVariablesForStartPtintingNewRecord()
+        {
+            _stopLine = false;
+            _queueRecords.Clear();
+            database.PreviousRecord = 0;
+            database.ActualRecord = 1;
+        }
+
+        #endregion
+
+        #region OnEvent Methods
+
+        private void OnJobSetEvent(ReaPi.ConnectionIdentifier connection, int job, string jobFileName)
+        {
+            SendToDashboard(MessageType.EVENT, $"Job: <{jobFileName}>", null, null);
+
+            if (!string.IsNullOrEmpty(jobFileName))
+            {
+                try
+                {
+                    rjConnection.Job = new RJJob(job, jobFileName);
+
+                    if (rjConnection.Job.VariableContents.Count > 0)
+                    {
+                        ISet<string> groups = rjConnection.Job.GetGroups();
+                        //subskrypcja dla każdej grupy
+                        foreach (var group in groups)
+                        {
+                            ReaPi.SubscribeInvalidContent(connection, job, group).ToString();
+                            ReaPi.SubscribeBufferFull(connection, job, group).ToString();
+                        }
+                    }
+                }
+                catch (Exception) { }
+
+                string logError;
+
+                logError = ReaPi.SubscribeJobStarted(connection, job).ToString();
+                logError += ReaPi.SubscribeJobStopped(connection, job).ToString();
+                logError += ReaPi.SubscribeIOConfigurationSet(connection, job).ToString();
+                logError += ReaPi.SubscribePrintTrigger(connection, job).ToString();
+                logError += ReaPi.SubscribePrintStart(connection, job).ToString();
+                logError += ReaPi.SubscribePrintRejected(connection, job).ToString();
+                logError += ReaPi.SubscribePrintEnd(connection, job).ToString();
+                logError += ReaPi.SubscribePrintAborted(connection, job).ToString();
+                logError += ReaPi.SubscribePrintSpeedError(connection, job).ToString();
+                logError += ReaPi.SubscribeMissingContent(connection, job).ToString();
+
+                SendToDashboard(MessageType.ERROR, logError, "", "");
+            }
+            else
+            {
+                ShowProblemSolution(ErrorType.nullJob);                
+            }
+        }
+
+        private void OnJobStartedEvent()
+        {
+            UpdateDashboard(EventType.JOBSTARTED);
+            //SetOutputLevel(OutputTypeReaction.JobStatus, OutputLevel.High);
+        }
+
+        private void OnJobStoppedEvent()
+        {
+            UpdateDashboard(EventType.JOBSTOPPED);
+            //SetOutputLevel(OutputTypeReaction.JobStatus, OutputLevel.Low);
+        }
+
+        private void OnJobBufferFullEvent(ErrorStatus errorStatus)
+        {
+            try
+            {
+                Record record = _queueRecords.Last();
+                SendToDashboard(MessageType.ERROR, "Przepełniony bufor", errorStatus.Domain.ToString() + " / " + errorStatus.Code.ToString(), errorStatus.Message);
+            }
+            catch (Exception) { }
+            finally
+            {
+                if (bufferFullStopJob == true)
+                {
+                    RJStopJob();
+                    ShowProblemSolution(ErrorType.bufferFull);
+                }
+            }
+        }
+
+        private void OnIOConfigurationSetEvent(string ioFileName)
+        {
+            rjConnection.IOConfiguration = ioFileName;
+
+            SendToDashboard(MessageType.EVENT, $"I/O: <{ioFileName}>", null, null);
+            UpdateDashboard(EventType.IOSET);
+        }
+
+        private void OnInvalidContentEvent(string groupName)
+        {
+            SendToDashboard(MessageType.EVENT, $" Grupa: <{groupName}>", null, null);
+            if (invalidContentStopJob == true)
+            {
+                RJStopJob();
+                ShowProblemSolution(ErrorType.invalidContent);
+            }
+        }
+
+        private void OnMissingContentEvent(string groupName)
+        {
+            SendToDashboard(MessageType.EVENT, $" Grupa: <{groupName}>", null, null);
+            if (missingContentStopJob == true)
+            {
+                RJStopJob();
+                ShowProblemSolution(ErrorType.missingContent);
+            }
+        }
+
+        private void OnJobPrintTriggerEvent(ReaPi.EEventId eventId)
+        {
+            PrepareNextRecord(eventId);
+        }
+
+        private void OnJobPrintStartEvent(ReaPi.EEventId eventId)
+        {
+            UpdateDashboard(EventType.PRINTSTARTED);
+
+            if (_queueRecords.Count > 0)
+            {
+                Record record = _queueRecords.First();
+                SendToDashboard(MessageType.EVENT, $" Wiersz: <{record.Id.ToString()}>", null, null);
+
+                if (record.IsError == true)
+                {
+                    SendToDashboard(MessageType.EVENT, " Zatrzymany wydruk", null, null);
+                    RJStopJob();
+                    ShowProblemSolution(ErrorType.errorRecordToPrint);
+                }
+                //nowy kod do sprawdzenia
+                PrepareNextRecord(eventId);
+            }
+            else
+            {
+                SendToDashboard(MessageType.ERROR, "Brak danych do wydruku", null, null);
+                RJStopJob();
+                ShowProblemSolution(ErrorType.noRecordToPrint);
+            }
+        }
+
+        private void OnJobPrintRejectEvent()
+        {
+            if (printRejectStopJob == true)
+            {
+                RJStopJob();
+                ShowProblemSolution(ErrorType.printReject);
+            }
+        }
+
+        private void OnJobPrintEndEvent()
+        {
+            try
+            {
+                Record record = _queueRecords.First();
+
+                //OutputLevel level = GetOutputLevelToBeSetForAssignedColumn(OutputTypeReaction.ControlStacker, record.Id);
+                //SetOutputLevel(OutputTypeReaction.ControlStacker, level);
+
+                _queueRecords.Dequeue();
+            }
+            catch (Exception) { }
+
+            if (_stopLine == true)
+            {
+                SendToDashboard(MessageType.LOG, "Koniec bazy", $"Wydrukowano ostatni rekord: {DateTime.Now.ToString()}", null);
+                RJStopJob();
+                ShowProblemSolution(ErrorType.printedLastRecord);
+            }
+
+        }
+
+        private void OnJobPrintAbortedEvent()
+        {
+            try
+            {
+                Record record = _queueRecords.Last();
+                SendToDashboard(MessageType.EVENT, $" Wiersz: <{record.Id.ToString()}>", null, null);
+            }
+            catch (Exception) { }
+            finally
+            {
+                if (printAbortedStopJob == true)
+                {
+                    RJStopJob();
+                    ShowProblemSolution(ErrorType.printAborted);
+                }
+            }
+        }
+
+        private void OnJobPrintSpeedErrorEvent()
+        {
+            try
+            {
+                Record record = _queueRecords.Last();
+                SendToDashboard(MessageType.EVENT, $" Wiersz: <{record.Id.ToString()}>", null, null);
+            }
+            catch (Exception) { }
+            finally
+            {
+                if (printSpeedErrorStopJob == true)
+                {
+                    RJStopJob();
+                    ShowProblemSolution(ErrorType.printSpeedError);
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region PUBLIC Methods
+        public void SetPrinterControlParameters(bool printTrigger, bool invalidContent, bool printReject, bool printAborted, bool printSpeedError, bool missingContent, bool bufferFull)
+        {
+            isPrintTrigger = printTrigger;
+            invalidContentStopJob = invalidContent;
+            printRejectStopJob = printReject;
+            printAbortedStopJob = printAborted;
+            printSpeedErrorStopJob = printSpeedError;
+            missingContentStopJob = missingContent;
+            bufferFullStopJob = bufferFull;
+        }
+
+        public void ManualSendRecordToPrint(double actualRecord)
+        {
+            PrepareVariablesForStartPtintingNewRecord();
+
+            SendRecordToPrint(actualRecord);
         }
 
         public string[] GetJobFiles()
@@ -516,41 +900,37 @@ namespace RJController
 
         public void RJConnect(string ipAddress)
         {
-            if (!(rjConnection == null) && (rjConnection.ConnectionID <= 0))
+            if (rjConnection == null || rjConnection.ConnectionID <= 0)
             {
                 try
                 {
-                    ReaPi.EErrorCode errorCode = (ReaPi.EErrorCode)ReaPi.Connect("TCP://" + ipAddress);
-                    if (errorCode >= ReaPi.EErrorCode.OK)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        _view.DisplayLogsAndErrors("Połączenie <" + ipAddress + "> zamknięte z błędem ", errorCode.ToString(), null);
-                        _view.ShowProblemSolution(ErrorType.errorConnection);
-                    }                    
+                    ReaPi.Connect("TCP://" + ipAddress);
                 }
-                catch (Exception)
-                {
-                    //log = "Error on calling function ReaConnect()";
-
+                catch (Exception e) {
+                    AppLogger.GetLogger().Error($"Błąd połączenia z IP: {ipAddress}", e);
                 }
-            }
-            else
-            {
-                _view.ShowProblemSolution(ErrorType.nullIPAddress);
-            }
+            }            
         }
 
         public void RJSetJob(string jobName)
         {
-
+            OnJobSetEvent((ReaPi.ConnectionIdentifier)1, 1, $"C:\\temp\\_ReaTest\\jobs\\{jobName}");
+            UpdateDashboard(EventType.JOBSET);
         }
 
         public void RJClearJob()
         {
 
+        }
+
+        public void RJStopJob()
+        {
+            UpdateDashboard(EventType.JOBSTOPPED);
+        }
+
+        public void RJStartJob()
+        {
+            UpdateDashboard(EventType.JOBSTARTED);
         }
 
         public void RJDisconnect()
@@ -562,11 +942,171 @@ namespace RJController
 
                 ReaPi.Disconnect(rjConnection.ConnectionID);
             }
-            catch (Exception e)
-            {
-                _view.DisplayLogsAndErrors("Błąd wywołania metody Disconnect", e.Source.ToString(), e.Message.ToString());
+            catch (Exception e) {
+                AppLogger.GetLogger().Error($"Błąd rozłączenia połączenia i ID: {rjConnection.ConnectionID}", e);
             }
         }
+
+        public void RJSetIOConfiguration(string fileName)
+        {
+
+        }
+
+        public void AssignSettingsToVariableContents(string fileName)
+        {
+            List<DTOLabelSettings> listDTO = new List<DTOLabelSettings>();
+
+            LabelSettings labelSettings = new LabelSettings();
+
+            listDTO = labelSettings.Load(fileName);
+
+            //if (countVariableContents != listDTO.Count)
+            //{
+            //    string message = "Brak zgodności pomiędzy etykietą a zapisanymi danymi!\n sterownik: " + countVariableContents.ToString() + " wczytane dane: " + listDTO.Count.ToString();
+            //    MessageBox.Show(message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    //UpdateCheckList(helper.Label, false);
+            //    return;
+            //}
+
+            //Przypisuje ustawienia etykiety
+            //DODA AUTOMATYCZNY ODCZYT ilosci kolumn
+            rjConnection.Job.AssignSettings(listDTO, 10);
+        }
+
+        public List<Header> GetHeaders()
+        {
+            return database.GetHeaders();
+        }
+
+        public int GetVariableContentsCount()
+        {
+            return rjConnection.Job.VariableContents.Count;
+        }
+
+        public double GetDatabaseMaxRecords()
+        {
+            return database.MaxRecords();
+        }
+
+        public double GetActualRecord()
+        {
+            return database.ActualRecord;
+        }
+
+        public IDictionary<int, DigitalOutput> GetDigitalOutputs()
+        {
+            return rjConnection.GetOutputs();
+        }
+
+        public List<IVariableContent> GetVariableContents()
+        {
+            return rjConnection.Job.GetVariableContents();
+        }
+
+        public string GetActualJobFile()
+        {
+            return rjConnection.Job.JobFile;
+        }
+
+        public string GetActualIOFile()
+        {
+            return rjConnection.IOConfiguration;
+        }
+
+        public bool JobIsNull()
+        {
+            if (rjConnection.Job == null)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+            
+        }
+
+        public string GetDataFieldName(int columnNumber)
+        {
+            int headresCount = database.GetHeadersCount();
+            if (columnNumber < 0 || columnNumber > headresCount || headresCount <= 0)
+                return "";
+
+            return database.GetHeaderName(columnNumber);
+        }
+
+        public void AssignOutputToDataField(int outputNumber, int dataField)
+        {
+            if (outputNumber > 0)
+            {
+                rjConnection.Outputs[outputNumber].DataField = dataField;
+            }            
+            rjConnection.Job.VariableContents[dataField].OutputControl = outputNumber;
+        }
+
+        public void AssignDataFieldToContent(int dataField,  int labelContentNumber)
+        {
+            rjConnection.Job.VariableContents[labelContentNumber].DataField = dataField;
+        }
+
+        public bool LoadDatabase(string fileName)
+        {
+            if (database.ClearDatabase() == false)
+                return false;
+
+            const char fieldSeparator = ';';
+            bool createHeader = true;
+            string logInfo = "";
+            try
+            {
+                using (var sr = new StreamReader(fileName, Encoding.UTF8, detectEncodingFromByteOrderMarks: true))
+                {
+                    SendToDashboard(MessageType.EVENT, "Baza: " + fileName, null, null);
+
+                    FileInfo fileCSV = new FileInfo(fileName);
+                    long fileSize = fileCSV.Length;
+                    long currentSize = 0;
+
+                    long row = 0;
+                    int numberOfColumns = 0;
+
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        currentSize += line.Length;
+
+                        List<string> record = line.Split(fieldSeparator).ToList();
+
+                        if (createHeader)
+                        {
+                            numberOfColumns = record.Count();
+                            database.AddHeaders(record);
+                            createHeader = false;
+                        }
+                        else
+                        {
+                            row += 1;
+                            if (numberOfColumns == record.Count)
+                            {
+                                database.AddRecord(record);
+                            }
+                            else
+                            {
+                                //logInfo += " - wiersz nr: " + row.ToString() + "\n";
+                                SendToDashboard(MessageType.EVENT, "Niezgodność bazy - wiersz: " + row.ToString(), null, null);
+
+                                AppLogger.GetLogger().Error("Brak zgodności rekordu: " + row.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception) { }
+
+                return true;
+        }
+
+        #endregion
+
 
     }
 }

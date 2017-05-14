@@ -9,7 +9,7 @@ namespace RJController.Dashboard
 {
     public interface IDashboard
     {
-        void UpdateDashboard(string rjEvent);
+        void UpdateDashboard(EventType rjEvent);
         void DisplayEvents(string log);
         void DisplayLogsAndErrors(string log, string errorCodeDomain, string messageError);
         void ShowProblemSolution(ErrorType type);

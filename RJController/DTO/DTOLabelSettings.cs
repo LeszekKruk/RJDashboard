@@ -6,24 +6,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace RJController.Label
+namespace RJController.DTO
 {
-    public class VariableDataLabel : IVariableDataLabel
+    public class DTOLabelSettings
     {
         public string GroupName { get; set; }
-
         public string LabelName { get; set; }
-
         public string ObjectName { get; set; }
-
         public string ContentName { get; set; }
-
-        public string ContentValue { get; set; }
-
-        public string ContentType { get; set; }
-
         public int OutputControl { get; set; }
-
         public int DataField { get; set; }
+
+
+        public DTOLabelSettings() { }
+
+        public DTOLabelSettings(string group, string labelName, string objectName, string contentName, int output, int data)
+        {
+            GroupName = group;
+            LabelName = labelName;
+            ObjectName = objectName;
+            ContentName = contentName;
+            OutputControl = output;
+            DataField = data;
+        }
     }
 }

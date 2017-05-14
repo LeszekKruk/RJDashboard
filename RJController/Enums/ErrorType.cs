@@ -21,6 +21,7 @@ namespace RJController.Enums
         errorRecordToPrint,  //błąd rekordu - jeszcze raz
         printedLastRecord,   //wydrukowano ostatni rekord
         libraryError,
-        nullJob
+        nullJob,
+        nullIO
     }
 }
