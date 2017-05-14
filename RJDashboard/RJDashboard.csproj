@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ComboBoxItem.cs" />
     <Compile Include="Controls\TextLogs.cs">
       <SubType>UserControl</SubType>
     </Compile>

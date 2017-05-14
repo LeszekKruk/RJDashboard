@@ -64,6 +64,21 @@
             this.tileSetJob = new MetroFramework.Controls.MetroTile();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
             this.cmbJobFiles = new MetroFramework.Controls.MetroComboBox();
+            this.tabLabelSettings = new MetroFramework.Controls.MetroTabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.tileLoadLabelSettings = new MetroFramework.Controls.MetroTile();
+            this.tileSaveLabelSettings = new MetroFramework.Controls.MetroTile();
+            this.txtLabelSettings = new MetroFramework.Controls.MetroLabel();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.tileClearOutputToColumn = new MetroFramework.Controls.MetroTile();
+            this.tileSetOutputToColumn = new MetroFramework.Controls.MetroTile();
+            this.comboOutputs = new MetroFramework.Controls.MetroComboBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.comboCSVHeaders = new MetroFramework.Controls.MetroComboBox();
+            this.tileClearDataCSVToLabel = new MetroFramework.Controls.MetroTile();
+            this.tileSetDataCSVToLabel = new MetroFramework.Controls.MetroTile();
+            this.listLabelContents = new System.Windows.Forms.ListView();
+            this.metroLabel13 = new MetroFramework.Controls.MetroLabel();
             this.tabIOControl = new MetroFramework.Controls.MetroTabPage();
             this.tileSetIOFiles = new MetroFramework.Controls.MetroTile();
             this.metroLabel8 = new MetroFramework.Controls.MetroLabel();
@@ -91,21 +106,6 @@
             this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
             this.tileLoadCSVFile = new MetroFramework.Controls.MetroTile();
             this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
-            this.tabLabelSettings = new MetroFramework.Controls.MetroTabPage();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.tileLoadLabelSettings = new MetroFramework.Controls.MetroTile();
-            this.tileSaveLabelSettings = new MetroFramework.Controls.MetroTile();
-            this.txtLabelSettings = new MetroFramework.Controls.MetroLabel();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tileClearOutputToColumn = new MetroFramework.Controls.MetroTile();
-            this.tileSetOutputToColumn = new MetroFramework.Controls.MetroTile();
-            this.comboOutputs = new MetroFramework.Controls.MetroComboBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.comboCSVHeaders = new MetroFramework.Controls.MetroComboBox();
-            this.tileClearDataCSVToLabel = new MetroFramework.Controls.MetroTile();
-            this.tileSetDataCSVToLabel = new MetroFramework.Controls.MetroTile();
-            this.listLabelContents = new System.Windows.Forms.ListView();
-            this.metroLabel13 = new MetroFramework.Controls.MetroLabel();
             this.tabAbout = new MetroFramework.Controls.MetroTabPage();
             this.metroLabel20 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel19 = new MetroFramework.Controls.MetroLabel();
@@ -155,14 +155,14 @@
             this.panelOutputs.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabJobControl.SuspendLayout();
-            this.tabIOControl.SuspendLayout();
-            this.tabDataPrint.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.tabLabelSettings.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.tabIOControl.SuspendLayout();
+            this.tabDataPrint.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.tabAbout.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -617,16 +617,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabJobControl);
+            this.tabControl.Controls.Add(this.tabDataPrint);
             this.tabControl.Controls.Add(this.tabLabelSettings);
             this.tabControl.Controls.Add(this.tabIOControl);
-            this.tabControl.Controls.Add(this.tabDataPrint);
             this.tabControl.Controls.Add(this.tabAbout);
             this.tabControl.Controls.Add(this.tabSettings);
             this.tabControl.FontWeight = MetroFramework.MetroTabControlWeight.Regular;
             this.tabControl.Location = new System.Drawing.Point(120, 195);
             this.tabControl.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 3;
+            this.tabControl.SelectedIndex = 2;
             this.tabControl.Size = new System.Drawing.Size(762, 495);
             this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl.Style = MetroFramework.MetroColorStyle.Orange;
@@ -708,6 +708,234 @@
             this.cmbJobFiles.Sorted = true;
             this.cmbJobFiles.Style = MetroFramework.MetroColorStyle.Orange;
             this.cmbJobFiles.TabIndex = 2;
+            // 
+            // tabLabelSettings
+            // 
+            this.tabLabelSettings.Controls.Add(this.groupBox7);
+            this.tabLabelSettings.Controls.Add(this.txtLabelSettings);
+            this.tabLabelSettings.Controls.Add(this.groupBox4);
+            this.tabLabelSettings.Controls.Add(this.groupBox3);
+            this.tabLabelSettings.Controls.Add(this.listLabelContents);
+            this.tabLabelSettings.Controls.Add(this.metroLabel13);
+            this.tabLabelSettings.HorizontalScrollbarBarColor = true;
+            this.tabLabelSettings.HorizontalScrollbarSize = 8;
+            this.tabLabelSettings.Location = new System.Drawing.Point(4, 35);
+            this.tabLabelSettings.Margin = new System.Windows.Forms.Padding(2);
+            this.tabLabelSettings.Name = "tabLabelSettings";
+            this.tabLabelSettings.Size = new System.Drawing.Size(754, 456);
+            this.tabLabelSettings.Style = MetroFramework.MetroColorStyle.Green;
+            this.tabLabelSettings.TabIndex = 1;
+            this.tabLabelSettings.Text = "Etykieta";
+            this.tabLabelSettings.VerticalScrollbarBarColor = true;
+            this.tabLabelSettings.VerticalScrollbarSize = 8;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.BackColor = System.Drawing.SystemColors.Window;
+            this.groupBox7.Controls.Add(this.tileLoadLabelSettings);
+            this.groupBox7.Controls.Add(this.tileSaveLabelSettings);
+            this.groupBox7.Location = new System.Drawing.Point(584, 35);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox7.Size = new System.Drawing.Size(170, 130);
+            this.groupBox7.TabIndex = 30;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Ustawienia etykiety";
+            // 
+            // tileLoadLabelSettings
+            // 
+            this.tileLoadLabelSettings.Location = new System.Drawing.Point(6, 66);
+            this.tileLoadLabelSettings.Margin = new System.Windows.Forms.Padding(2);
+            this.tileLoadLabelSettings.Name = "tileLoadLabelSettings";
+            this.tileLoadLabelSettings.Size = new System.Drawing.Size(75, 50);
+            this.tileLoadLabelSettings.Style = MetroFramework.MetroColorStyle.Silver;
+            this.tileLoadLabelSettings.TabIndex = 21;
+            this.tileLoadLabelSettings.Text = "Wczytaj";
+            this.tileLoadLabelSettings.TileImage = ((System.Drawing.Image)(resources.GetObject("tileLoadLabelSettings.TileImage")));
+            this.tileLoadLabelSettings.TileImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.tileLoadLabelSettings.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
+            this.tileLoadLabelSettings.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
+            this.tileLoadLabelSettings.UseTileImage = true;
+            this.tileLoadLabelSettings.Click += new System.EventHandler(this.tileLoadLabelSettings_Click);
+            // 
+            // tileSaveLabelSettings
+            // 
+            this.tileSaveLabelSettings.Location = new System.Drawing.Point(90, 66);
+            this.tileSaveLabelSettings.Margin = new System.Windows.Forms.Padding(2);
+            this.tileSaveLabelSettings.Name = "tileSaveLabelSettings";
+            this.tileSaveLabelSettings.Size = new System.Drawing.Size(75, 50);
+            this.tileSaveLabelSettings.Style = MetroFramework.MetroColorStyle.Silver;
+            this.tileSaveLabelSettings.TabIndex = 20;
+            this.tileSaveLabelSettings.Text = "Zapisz";
+            this.tileSaveLabelSettings.TileImage = ((System.Drawing.Image)(resources.GetObject("tileSaveLabelSettings.TileImage")));
+            this.tileSaveLabelSettings.TileImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.tileSaveLabelSettings.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
+            this.tileSaveLabelSettings.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
+            this.tileSaveLabelSettings.UseTileImage = true;
+            this.tileSaveLabelSettings.Click += new System.EventHandler(this.tileSaveLabelSettings_Click);
+            // 
+            // txtLabelSettings
+            // 
+            this.txtLabelSettings.Location = new System.Drawing.Point(125, 20);
+            this.txtLabelSettings.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.txtLabelSettings.Name = "txtLabelSettings";
+            this.txtLabelSettings.Size = new System.Drawing.Size(454, 19);
+            this.txtLabelSettings.TabIndex = 29;
+            this.txtLabelSettings.Text = "...";
+            this.txtLabelSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.BackColor = System.Drawing.SystemColors.Window;
+            this.groupBox4.Controls.Add(this.tileClearOutputToColumn);
+            this.groupBox4.Controls.Add(this.tileSetOutputToColumn);
+            this.groupBox4.Controls.Add(this.comboOutputs);
+            this.groupBox4.Location = new System.Drawing.Point(583, 326);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox4.Size = new System.Drawing.Size(170, 130);
+            this.groupBox4.TabIndex = 28;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Sterowanie wyjściem";
+            // 
+            // tileClearOutputToColumn
+            // 
+            this.tileClearOutputToColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tileClearOutputToColumn.Location = new System.Drawing.Point(90, 72);
+            this.tileClearOutputToColumn.Margin = new System.Windows.Forms.Padding(2);
+            this.tileClearOutputToColumn.Name = "tileClearOutputToColumn";
+            this.tileClearOutputToColumn.Size = new System.Drawing.Size(75, 50);
+            this.tileClearOutputToColumn.Style = MetroFramework.MetroColorStyle.Red;
+            this.tileClearOutputToColumn.TabIndex = 28;
+            this.tileClearOutputToColumn.Text = "Usuń";
+            this.tileClearOutputToColumn.TileImage = ((System.Drawing.Image)(resources.GetObject("tileClearOutputToColumn.TileImage")));
+            this.tileClearOutputToColumn.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tileClearOutputToColumn.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
+            this.tileClearOutputToColumn.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
+            this.tileClearOutputToColumn.UseTileImage = true;
+            this.tileClearOutputToColumn.Click += new System.EventHandler(this.tileClearOutputToColumn_Click);
+            // 
+            // tileSetOutputToColumn
+            // 
+            this.tileSetOutputToColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tileSetOutputToColumn.Location = new System.Drawing.Point(9, 72);
+            this.tileSetOutputToColumn.Margin = new System.Windows.Forms.Padding(2);
+            this.tileSetOutputToColumn.Name = "tileSetOutputToColumn";
+            this.tileSetOutputToColumn.Size = new System.Drawing.Size(75, 50);
+            this.tileSetOutputToColumn.Style = MetroFramework.MetroColorStyle.Lime;
+            this.tileSetOutputToColumn.TabIndex = 27;
+            this.tileSetOutputToColumn.Text = "Ustaw";
+            this.tileSetOutputToColumn.TileImage = ((System.Drawing.Image)(resources.GetObject("tileSetOutputToColumn.TileImage")));
+            this.tileSetOutputToColumn.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tileSetOutputToColumn.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
+            this.tileSetOutputToColumn.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
+            this.tileSetOutputToColumn.UseTileImage = true;
+            this.tileSetOutputToColumn.Click += new System.EventHandler(this.tileSetOutputToColumn_Click);
+            // 
+            // comboOutputs
+            // 
+            this.comboOutputs.FormattingEnabled = true;
+            this.comboOutputs.ItemHeight = 23;
+            this.comboOutputs.Location = new System.Drawing.Point(4, 33);
+            this.comboOutputs.Margin = new System.Windows.Forms.Padding(2);
+            this.comboOutputs.Name = "comboOutputs";
+            this.comboOutputs.Size = new System.Drawing.Size(162, 29);
+            this.comboOutputs.Style = MetroFramework.MetroColorStyle.Orange;
+            this.comboOutputs.TabIndex = 25;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.BackColor = System.Drawing.SystemColors.Window;
+            this.groupBox3.Controls.Add(this.comboCSVHeaders);
+            this.groupBox3.Controls.Add(this.tileClearDataCSVToLabel);
+            this.groupBox3.Controls.Add(this.tileSetDataCSVToLabel);
+            this.groupBox3.Location = new System.Drawing.Point(583, 178);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Size = new System.Drawing.Size(170, 130);
+            this.groupBox3.TabIndex = 27;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Ustawienia danych do wydruku";
+            // 
+            // comboCSVHeaders
+            // 
+            this.comboCSVHeaders.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboCSVHeaders.FormattingEnabled = true;
+            this.comboCSVHeaders.ItemHeight = 23;
+            this.comboCSVHeaders.Location = new System.Drawing.Point(4, 28);
+            this.comboCSVHeaders.Margin = new System.Windows.Forms.Padding(2);
+            this.comboCSVHeaders.Name = "comboCSVHeaders";
+            this.comboCSVHeaders.Size = new System.Drawing.Size(162, 29);
+            this.comboCSVHeaders.Style = MetroFramework.MetroColorStyle.Orange;
+            this.comboCSVHeaders.TabIndex = 20;
+            // 
+            // tileClearDataCSVToLabel
+            // 
+            this.tileClearDataCSVToLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tileClearDataCSVToLabel.Location = new System.Drawing.Point(90, 71);
+            this.tileClearDataCSVToLabel.Margin = new System.Windows.Forms.Padding(2);
+            this.tileClearDataCSVToLabel.Name = "tileClearDataCSVToLabel";
+            this.tileClearDataCSVToLabel.Size = new System.Drawing.Size(75, 50);
+            this.tileClearDataCSVToLabel.Style = MetroFramework.MetroColorStyle.Red;
+            this.tileClearDataCSVToLabel.TabIndex = 19;
+            this.tileClearDataCSVToLabel.Text = "Usuń";
+            this.tileClearDataCSVToLabel.TileImage = ((System.Drawing.Image)(resources.GetObject("tileClearDataCSVToLabel.TileImage")));
+            this.tileClearDataCSVToLabel.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tileClearDataCSVToLabel.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
+            this.tileClearDataCSVToLabel.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
+            this.tileClearDataCSVToLabel.UseTileImage = true;
+            this.tileClearDataCSVToLabel.Click += new System.EventHandler(this.tileClearDataCSVToLabel_Click);
+            // 
+            // tileSetDataCSVToLabel
+            // 
+            this.tileSetDataCSVToLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tileSetDataCSVToLabel.Location = new System.Drawing.Point(9, 71);
+            this.tileSetDataCSVToLabel.Margin = new System.Windows.Forms.Padding(2);
+            this.tileSetDataCSVToLabel.Name = "tileSetDataCSVToLabel";
+            this.tileSetDataCSVToLabel.Size = new System.Drawing.Size(75, 50);
+            this.tileSetDataCSVToLabel.Style = MetroFramework.MetroColorStyle.Lime;
+            this.tileSetDataCSVToLabel.TabIndex = 18;
+            this.tileSetDataCSVToLabel.Text = "Ustaw";
+            this.tileSetDataCSVToLabel.TileImage = ((System.Drawing.Image)(resources.GetObject("tileSetDataCSVToLabel.TileImage")));
+            this.tileSetDataCSVToLabel.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tileSetDataCSVToLabel.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
+            this.tileSetDataCSVToLabel.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
+            this.tileSetDataCSVToLabel.UseTileImage = true;
+            this.tileSetDataCSVToLabel.Click += new System.EventHandler(this.tileSetDataCSVToLabel_Click);
+            // 
+            // listLabelContents
+            // 
+            this.listLabelContents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listLabelContents.FullRowSelect = true;
+            this.listLabelContents.GridLines = true;
+            listViewGroup1.Header = "ListViewGroup";
+            listViewGroup1.Name = "listViewGroup1";
+            this.listLabelContents.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1});
+            this.listLabelContents.HideSelection = false;
+            this.listLabelContents.Location = new System.Drawing.Point(2, 41);
+            this.listLabelContents.Margin = new System.Windows.Forms.Padding(2);
+            this.listLabelContents.MultiSelect = false;
+            this.listLabelContents.Name = "listLabelContents";
+            this.listLabelContents.ShowGroups = false;
+            this.listLabelContents.Size = new System.Drawing.Size(579, 413);
+            this.listLabelContents.TabIndex = 15;
+            this.listLabelContents.UseCompatibleStateImageBehavior = false;
+            this.listLabelContents.View = System.Windows.Forms.View.Details;
+            // 
+            // metroLabel13
+            // 
+            this.metroLabel13.AutoSize = true;
+            this.metroLabel13.Location = new System.Drawing.Point(2, 20);
+            this.metroLabel13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.metroLabel13.Name = "metroLabel13";
+            this.metroLabel13.Size = new System.Drawing.Size(119, 19);
+            this.metroLabel13.TabIndex = 14;
+            this.metroLabel13.Text = "Zawartość etykiety:";
             // 
             // tabIOControl
             // 
@@ -875,6 +1103,7 @@
             this.txtFileName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(586, 19);
+            this.txtFileName.Style = MetroFramework.MetroColorStyle.Orange;
             this.txtFileName.TabIndex = 22;
             this.txtFileName.Text = "...";
             this.txtFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1090,233 +1319,6 @@
             this.metroLabel10.Size = new System.Drawing.Size(158, 19);
             this.metroLabel10.TabIndex = 2;
             this.metroLabel10.Text = "Wczytaj dane z pliku CSV:";
-            // 
-            // tabLabelSettings
-            // 
-            this.tabLabelSettings.Controls.Add(this.groupBox7);
-            this.tabLabelSettings.Controls.Add(this.txtLabelSettings);
-            this.tabLabelSettings.Controls.Add(this.groupBox4);
-            this.tabLabelSettings.Controls.Add(this.groupBox3);
-            this.tabLabelSettings.Controls.Add(this.listLabelContents);
-            this.tabLabelSettings.Controls.Add(this.metroLabel13);
-            this.tabLabelSettings.HorizontalScrollbarBarColor = true;
-            this.tabLabelSettings.HorizontalScrollbarSize = 8;
-            this.tabLabelSettings.Location = new System.Drawing.Point(4, 35);
-            this.tabLabelSettings.Margin = new System.Windows.Forms.Padding(2);
-            this.tabLabelSettings.Name = "tabLabelSettings";
-            this.tabLabelSettings.Size = new System.Drawing.Size(754, 456);
-            this.tabLabelSettings.Style = MetroFramework.MetroColorStyle.Green;
-            this.tabLabelSettings.TabIndex = 1;
-            this.tabLabelSettings.Text = "Etykieta";
-            this.tabLabelSettings.VerticalScrollbarBarColor = true;
-            this.tabLabelSettings.VerticalScrollbarSize = 8;
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.BackColor = System.Drawing.SystemColors.Window;
-            this.groupBox7.Controls.Add(this.tileLoadLabelSettings);
-            this.groupBox7.Controls.Add(this.tileSaveLabelSettings);
-            this.groupBox7.Location = new System.Drawing.Point(584, 35);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox7.Size = new System.Drawing.Size(170, 130);
-            this.groupBox7.TabIndex = 30;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Ustawienia etykiety";
-            // 
-            // tileLoadLabelSettings
-            // 
-            this.tileLoadLabelSettings.Location = new System.Drawing.Point(6, 66);
-            this.tileLoadLabelSettings.Margin = new System.Windows.Forms.Padding(2);
-            this.tileLoadLabelSettings.Name = "tileLoadLabelSettings";
-            this.tileLoadLabelSettings.Size = new System.Drawing.Size(75, 50);
-            this.tileLoadLabelSettings.Style = MetroFramework.MetroColorStyle.Silver;
-            this.tileLoadLabelSettings.TabIndex = 21;
-            this.tileLoadLabelSettings.Text = "Wczytaj";
-            this.tileLoadLabelSettings.TileImage = ((System.Drawing.Image)(resources.GetObject("tileLoadLabelSettings.TileImage")));
-            this.tileLoadLabelSettings.TileImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.tileLoadLabelSettings.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
-            this.tileLoadLabelSettings.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
-            this.tileLoadLabelSettings.UseTileImage = true;
-            this.tileLoadLabelSettings.Click += new System.EventHandler(this.tileLoadLabelSettings_Click);
-            // 
-            // tileSaveLabelSettings
-            // 
-            this.tileSaveLabelSettings.Location = new System.Drawing.Point(90, 66);
-            this.tileSaveLabelSettings.Margin = new System.Windows.Forms.Padding(2);
-            this.tileSaveLabelSettings.Name = "tileSaveLabelSettings";
-            this.tileSaveLabelSettings.Size = new System.Drawing.Size(75, 50);
-            this.tileSaveLabelSettings.Style = MetroFramework.MetroColorStyle.Silver;
-            this.tileSaveLabelSettings.TabIndex = 20;
-            this.tileSaveLabelSettings.Text = "Zapisz";
-            this.tileSaveLabelSettings.TileImage = ((System.Drawing.Image)(resources.GetObject("tileSaveLabelSettings.TileImage")));
-            this.tileSaveLabelSettings.TileImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.tileSaveLabelSettings.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
-            this.tileSaveLabelSettings.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
-            this.tileSaveLabelSettings.UseTileImage = true;
-            // 
-            // txtLabelSettings
-            // 
-            this.txtLabelSettings.Location = new System.Drawing.Point(125, 20);
-            this.txtLabelSettings.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.txtLabelSettings.Name = "txtLabelSettings";
-            this.txtLabelSettings.Size = new System.Drawing.Size(454, 19);
-            this.txtLabelSettings.TabIndex = 29;
-            this.txtLabelSettings.Text = "...";
-            this.txtLabelSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.BackColor = System.Drawing.SystemColors.Window;
-            this.groupBox4.Controls.Add(this.tileClearOutputToColumn);
-            this.groupBox4.Controls.Add(this.tileSetOutputToColumn);
-            this.groupBox4.Controls.Add(this.comboOutputs);
-            this.groupBox4.Location = new System.Drawing.Point(583, 326);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Size = new System.Drawing.Size(170, 130);
-            this.groupBox4.TabIndex = 28;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Sterowanie wyjściem";
-            // 
-            // tileClearOutputToColumn
-            // 
-            this.tileClearOutputToColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tileClearOutputToColumn.Location = new System.Drawing.Point(90, 72);
-            this.tileClearOutputToColumn.Margin = new System.Windows.Forms.Padding(2);
-            this.tileClearOutputToColumn.Name = "tileClearOutputToColumn";
-            this.tileClearOutputToColumn.Size = new System.Drawing.Size(75, 50);
-            this.tileClearOutputToColumn.Style = MetroFramework.MetroColorStyle.Red;
-            this.tileClearOutputToColumn.TabIndex = 28;
-            this.tileClearOutputToColumn.Text = "Usuń";
-            this.tileClearOutputToColumn.TileImage = ((System.Drawing.Image)(resources.GetObject("tileClearOutputToColumn.TileImage")));
-            this.tileClearOutputToColumn.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tileClearOutputToColumn.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
-            this.tileClearOutputToColumn.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
-            this.tileClearOutputToColumn.UseTileImage = true;
-            this.tileClearOutputToColumn.Click += new System.EventHandler(this.tileClearOutputToColumn_Click);
-            // 
-            // tileSetOutputToColumn
-            // 
-            this.tileSetOutputToColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tileSetOutputToColumn.Location = new System.Drawing.Point(9, 72);
-            this.tileSetOutputToColumn.Margin = new System.Windows.Forms.Padding(2);
-            this.tileSetOutputToColumn.Name = "tileSetOutputToColumn";
-            this.tileSetOutputToColumn.Size = new System.Drawing.Size(75, 50);
-            this.tileSetOutputToColumn.Style = MetroFramework.MetroColorStyle.Lime;
-            this.tileSetOutputToColumn.TabIndex = 27;
-            this.tileSetOutputToColumn.Text = "Ustaw";
-            this.tileSetOutputToColumn.TileImage = ((System.Drawing.Image)(resources.GetObject("tileSetOutputToColumn.TileImage")));
-            this.tileSetOutputToColumn.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tileSetOutputToColumn.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
-            this.tileSetOutputToColumn.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
-            this.tileSetOutputToColumn.UseTileImage = true;
-            this.tileSetOutputToColumn.Click += new System.EventHandler(this.tileSetOutputToColumn_Click);
-            // 
-            // comboOutputs
-            // 
-            this.comboOutputs.FormattingEnabled = true;
-            this.comboOutputs.ItemHeight = 23;
-            this.comboOutputs.Location = new System.Drawing.Point(4, 33);
-            this.comboOutputs.Margin = new System.Windows.Forms.Padding(2);
-            this.comboOutputs.Name = "comboOutputs";
-            this.comboOutputs.Size = new System.Drawing.Size(162, 29);
-            this.comboOutputs.Style = MetroFramework.MetroColorStyle.Orange;
-            this.comboOutputs.TabIndex = 25;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.BackColor = System.Drawing.SystemColors.Window;
-            this.groupBox3.Controls.Add(this.comboCSVHeaders);
-            this.groupBox3.Controls.Add(this.tileClearDataCSVToLabel);
-            this.groupBox3.Controls.Add(this.tileSetDataCSVToLabel);
-            this.groupBox3.Location = new System.Drawing.Point(583, 178);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(170, 130);
-            this.groupBox3.TabIndex = 27;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Ustawienia danych do wydruku";
-            // 
-            // comboCSVHeaders
-            // 
-            this.comboCSVHeaders.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboCSVHeaders.FormattingEnabled = true;
-            this.comboCSVHeaders.ItemHeight = 23;
-            this.comboCSVHeaders.Location = new System.Drawing.Point(4, 28);
-            this.comboCSVHeaders.Margin = new System.Windows.Forms.Padding(2);
-            this.comboCSVHeaders.Name = "comboCSVHeaders";
-            this.comboCSVHeaders.Size = new System.Drawing.Size(162, 29);
-            this.comboCSVHeaders.Style = MetroFramework.MetroColorStyle.Orange;
-            this.comboCSVHeaders.TabIndex = 20;
-            // 
-            // tileClearDataCSVToLabel
-            // 
-            this.tileClearDataCSVToLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.tileClearDataCSVToLabel.Location = new System.Drawing.Point(90, 71);
-            this.tileClearDataCSVToLabel.Margin = new System.Windows.Forms.Padding(2);
-            this.tileClearDataCSVToLabel.Name = "tileClearDataCSVToLabel";
-            this.tileClearDataCSVToLabel.Size = new System.Drawing.Size(75, 50);
-            this.tileClearDataCSVToLabel.Style = MetroFramework.MetroColorStyle.Red;
-            this.tileClearDataCSVToLabel.TabIndex = 19;
-            this.tileClearDataCSVToLabel.Text = "Usuń";
-            this.tileClearDataCSVToLabel.TileImage = ((System.Drawing.Image)(resources.GetObject("tileClearDataCSVToLabel.TileImage")));
-            this.tileClearDataCSVToLabel.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tileClearDataCSVToLabel.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
-            this.tileClearDataCSVToLabel.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
-            this.tileClearDataCSVToLabel.UseTileImage = true;
-            this.tileClearDataCSVToLabel.Click += new System.EventHandler(this.tileClearDataCSVToLabel_Click);
-            // 
-            // tileSetDataCSVToLabel
-            // 
-            this.tileSetDataCSVToLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.tileSetDataCSVToLabel.Location = new System.Drawing.Point(9, 71);
-            this.tileSetDataCSVToLabel.Margin = new System.Windows.Forms.Padding(2);
-            this.tileSetDataCSVToLabel.Name = "tileSetDataCSVToLabel";
-            this.tileSetDataCSVToLabel.Size = new System.Drawing.Size(75, 50);
-            this.tileSetDataCSVToLabel.Style = MetroFramework.MetroColorStyle.Lime;
-            this.tileSetDataCSVToLabel.TabIndex = 18;
-            this.tileSetDataCSVToLabel.Text = "Ustaw";
-            this.tileSetDataCSVToLabel.TileImage = ((System.Drawing.Image)(resources.GetObject("tileSetDataCSVToLabel.TileImage")));
-            this.tileSetDataCSVToLabel.TileImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.tileSetDataCSVToLabel.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
-            this.tileSetDataCSVToLabel.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
-            this.tileSetDataCSVToLabel.UseTileImage = true;
-            this.tileSetDataCSVToLabel.Click += new System.EventHandler(this.tileSetDataCSVToLabel_Click);
-            // 
-            // listLabelContents
-            // 
-            this.listLabelContents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.listLabelContents.FullRowSelect = true;
-            this.listLabelContents.GridLines = true;
-            listViewGroup1.Header = "ListViewGroup";
-            listViewGroup1.Name = "listViewGroup1";
-            this.listLabelContents.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1});
-            this.listLabelContents.HideSelection = false;
-            this.listLabelContents.Location = new System.Drawing.Point(2, 41);
-            this.listLabelContents.Margin = new System.Windows.Forms.Padding(2);
-            this.listLabelContents.MultiSelect = false;
-            this.listLabelContents.Name = "listLabelContents";
-            this.listLabelContents.ShowGroups = false;
-            this.listLabelContents.Size = new System.Drawing.Size(579, 413);
-            this.listLabelContents.TabIndex = 15;
-            this.listLabelContents.UseCompatibleStateImageBehavior = false;
-            this.listLabelContents.View = System.Windows.Forms.View.Details;
-            // 
-            // metroLabel13
-            // 
-            this.metroLabel13.AutoSize = true;
-            this.metroLabel13.Location = new System.Drawing.Point(2, 20);
-            this.metroLabel13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.metroLabel13.Name = "metroLabel13";
-            this.metroLabel13.Size = new System.Drawing.Size(119, 19);
-            this.metroLabel13.TabIndex = 14;
-            this.metroLabel13.Text = "Zawartość etykiety:";
             // 
             // tabAbout
             // 
@@ -1937,6 +1939,11 @@
             this.tabControl.ResumeLayout(false);
             this.tabJobControl.ResumeLayout(false);
             this.tabJobControl.PerformLayout();
+            this.tabLabelSettings.ResumeLayout(false);
+            this.tabLabelSettings.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.tabIOControl.ResumeLayout(false);
             this.tabIOControl.PerformLayout();
             this.tabDataPrint.ResumeLayout(false);
@@ -1944,11 +1951,6 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.tabLabelSettings.ResumeLayout(false);
-            this.tabLabelSettings.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
             this.tabAbout.PerformLayout();
             this.tabSettings.ResumeLayout(false);

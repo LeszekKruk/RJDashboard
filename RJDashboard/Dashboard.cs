@@ -15,6 +15,8 @@ using RJController.DTO;
 using RJController.Job;
 using RJController.IO;
 using RJController.Model.Database;
+using RJDashboard.Classes;
+using System.Xml;
 
 namespace RJDashboard
 {
@@ -100,7 +102,6 @@ namespace RJDashboard
                 switch (rjEvent)
                 {   
                     //UpdateOutputsState()
-                    //UpdateChecklist()
                     case EventType.CONNECT:
                         ClearAndSetControlAfterConnections(true);
                         if (rjDevice.JobIsNull() == true )
@@ -115,37 +116,36 @@ namespace RJDashboard
 
                             LoadVariableContentsForLabel();
                             LoadOutputsSettings();
-                        }      
+                        }
+                        UpdateCheckList(EventType.CONNECT, true);
 
-                        SetBackgroundColorForConnectionStatus(true);
-                        
+                        SetBackgroundColorForConnectionStatus(true);                        
                         break;
-
                     case EventType.DISCONNECT:
                         ClearAndSetControlAfterConnections(false);
                         SetBackgroundColorForConnectionStatus(false);
                         SetBackgroundColorForJobStatus(false);
                         tabControl.Enabled = false;
-
+                        UpdateCheckList(EventType.CONNECT, false);
                         break;
-
                     case EventType.JOBSET:
                         LoadAndSetJobFiles(rjDevice.GetJobFiles(), rjDevice.GetActualJobFile());
                         LoadAndSetIOFiles(rjDevice.GetIOFiles(), rjDevice.GetActualIOFile());
                         LoadVariableContentsForLabel();
                         LoadOutputsSettings();
+                        UpdateCheckList(EventType.JOBSET, true);
                         break;
-
                     case EventType.JOBSTOPPED:
                         SetBackgroundColorForJobStatus(false);
                         cmbJobFiles.Enabled = true;
                         cmbIOFiles.Enabled = true;
+                        UpdateCheckList(EventType.JOBSTARTED, false);
                         break;
-
                     case EventType.JOBSTARTED:
                         SetBackgroundColorForJobStatus(true);
                         cmbJobFiles.Enabled = false;
                         cmbIOFiles.Enabled = false;
+                        UpdateCheckList(EventType.JOBSTARTED, true);
                         break;
                     case EventType.IOSET:
                         LoadAndSetIOFiles(rjDevice.GetIOFiles(), rjDevice.GetActualIOFile());
@@ -163,51 +163,55 @@ namespace RJDashboard
 
         #region PRIVATE Methods
 
-        private void LoadAndSetJobFiles(string[] files, string actualJob)
-        {
-            if (this.InvokeRequired)
+            #region JOB Title
+            private void LoadAndSetJobFiles(string[] files, string actualJob)
             {
-                Action<string[], string> loadAndSetJobFiles = new Action<string[], string>(this.LoadAndSetJobFiles);
-                if (!this.Created || this.IsDisposed)
-                    return;
-                this.Invoke(loadAndSetJobFiles, files, actualJob);
-            }
-            else
-            {
-                try
+                if (this.InvokeRequired)
                 {
-                    cmbJobFiles.Items.Clear();
-
-                    for (int i = 0; i < files.Length; i++)
-                    {
-                        cmbJobFiles.Items.Insert(i, (object)new FileInfo(files[i]).Name);
-                    }
+                    Action<string[], string> loadAndSetJobFiles = new Action<string[], string>(this.LoadAndSetJobFiles);
+                    if (!this.Created || this.IsDisposed)
+                        return;
+                    this.Invoke(loadAndSetJobFiles, files, actualJob);
+                }
+                else
+                {
                     try
                     {
-                        if (! string.IsNullOrEmpty(actualJob))
-                            cmbJobFiles.Text = actualJob;
+                        cmbJobFiles.Items.Clear();
+
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            cmbJobFiles.Items.Insert(i, (object)new FileInfo(files[i]).Name);
+                        }
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(actualJob))
+                                cmbJobFiles.Text = actualJob;
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Brak aktywnego zadania na sterowniku!", "Uwaga", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                            if (!string.IsNullOrEmpty(cmbJobFiles.Items[0].ToString()))
+                                cmbJobFiles.Text = cmbJobFiles.Items[0].ToString();
+
+                            AppLogger.GetLogger().Error("Brak aktywnego zadania na sterowniku!", e);
+                        }
+                        tileClearJob.Enabled = true;
+                        tileSetJob.Enabled = true;
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("Brak aktywnego zadania na sterowniku!", "Uwaga", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tileSetJob.Enabled = false;
+                        tileClearJob.Enabled = false;
 
-                        if (! string.IsNullOrEmpty(cmbJobFiles.Items[0].ToString()))
-                            cmbJobFiles.Text = cmbJobFiles.Items[0].ToString();
-
-                        AppLogger.GetLogger().Error("Brak aktywnego zadania na sterowniku!", e);
+                        AppLogger.GetLogger().Error("Problem podczas wczytywania listy zadań!", e);
                     }
-                    tileClearJob.Enabled = true;
-                    tileSetJob.Enabled = true;
-                }
-                catch (Exception e)
-                {
-                    tileSetJob.Enabled = false;
-                    tileClearJob.Enabled = false;
-
-                    AppLogger.GetLogger().Error("Problem podczas wczytywania listy zadań!", e);
                 }
             }
-        }
+            #endregion
+
+
 
         private void LoadAndSetIOFiles(string[] files, string actualIO)
         {
@@ -319,7 +323,8 @@ namespace RJDashboard
                 listViewItem.SubItems.Add(dto[i].ContentName);
                 listViewItem.SubItems.Add(dto[i].ContentValue);
                 listViewItem.SubItems.Add(GetDataFieldName(dto[i].DataField));
-                listViewItem.SubItems.Add(dto[i].OutputControl.ToString());
+                listViewItem.SubItems.Add(GetOutputName(dto[i].OutputControl));
+                //listViewItem.SubItems.Add(dto[i].OutputControl.ToString());
 
                 listLabelContents.Items.Add(listViewItem);
             }
@@ -407,7 +412,7 @@ namespace RJDashboard
                 listOutputs.Columns.Add(columnHeader);
             }
 
-            IDictionary<int, DigitalOutput> outputs = rjDevice.GetDigitalOutputs();
+            List<DigitalOutput> outputs = rjDevice.GetDigitalOutputs();
 
             for (int i = 0; i < outputs.Count; i++)
             {
@@ -425,6 +430,176 @@ namespace RJDashboard
         private string GetDataFieldName(int columnNumber)
         {
             return rjDevice.GetDataFieldName(columnNumber);
+        }
+
+        private string GetOutputName(int outputNumber)
+        {
+            return rjDevice.GetOutputName(outputNumber);
+        }
+
+        private string OpenXmlFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = labelSettingsPath;
+            openFileDialog.Filter = "Label settings files (*.xml)|*.xml";
+            openFileDialog.FilterIndex = 0;
+            openFileDialog.RestoreDirectory = false;
+            openFileDialog.Multiselect = false;
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return null;
+
+            return openFileDialog.FileName;
+        }
+
+        private void LoadToComboDigitalOutputs()
+        {
+            comboOutputs.Items.Clear();
+
+            List<DigitalOutput> outputs = rjDevice.GetDigitalOutputs();
+
+            for (int i = 0; i < outputs.Count; i++)
+            {
+                comboOutputs.Items.Add(outputs[i]);
+            }
+            //comboOutputs.SelectedIndex = 0;
+        }
+
+        private void LoadToComboDatabaseHeaders()
+        {
+            comboCSVHeaders.Items.Clear();
+            List<Header> headers = rjDevice.GetHeaders();
+
+            for (int i = 0; i < headers.Count; i++)
+            {
+                comboCSVHeaders.Items.Add(headers[i]);
+            }
+        }
+
+        private void ShowDatabaseInListView()
+        {
+            listCSVContent.Items.Clear();
+            listCSVContent.Columns.Clear();
+
+            comboCSVHeaders.Items.Clear();
+
+            progressBarCSVLoading.Visible = true;
+            progressBarCSVLoading.Minimum = 0;
+            progressBarCSVLoading.Maximum = 100;
+
+            LoadHeader();
+            LoadRecords();
+
+            UpdateProgressBar(1.0, 1.0);
+            MessageBox.Show("Dane zostały załadowane...", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            LoadToComboDatabaseHeaders();
+            LoadToComboDigitalOutputs();
+
+            progressBarCSVLoading.Visible = false;
+
+            tileFindRecord.Enabled = listCSVContent.Items.Count > 0;
+            tileSendData.Enabled = listCSVContent.Items.Count > 0;
+
+            checkSubitems.Enabled = listCSVContent.Items.Count > 0;
+            checkPartialMatches.Enabled = listCSVContent.Items.Count > 0;
+        }
+
+        private void LoadRecords()
+        {
+            double maxRecords = rjDevice.GetDatabaseMaxRecords();
+            int headersCount = rjDevice.GetHeadersCount();
+
+            for (int i = 1; i <= maxRecords; i++)
+            {
+                UpdateProgressBar(i, maxRecords);
+                List<string> record = rjDevice.GetRecordWithKey(i);
+
+                ListViewItem aa = new ListViewItem(i.ToString());
+
+                for (int j = 1; j < headersCount; j++)
+                {
+                    aa.SubItems.Add(record[j]);
+                }
+                try
+                {
+                    listCSVContent.Items.Add(aa);
+                }
+                catch (Exception ex)
+                {
+                    string info = "Błąd podczas wczytywania bazy danych do kontrolki ListView: " + ex.ToString();
+                    MessageBox.Show(info, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    AppLogger.GetLogger().Error("Błąd podczas wczytywania bazy danych do kontrolki ListView", ex);
+                }
+            }
+        }
+
+        private void LoadHeader()
+        {
+            List<Header> headers = rjDevice.GetHeaders();
+
+            foreach (var item in headers)
+            {
+                ColumnHeader columnHeader = new ColumnHeader();
+                columnHeader.Name = "column " + item.Id;
+                columnHeader.Text = item.Name;
+                SizeF sizeF = Graphics.FromHwnd(listCSVContent.Handle).MeasureString(columnHeader.Text, listCSVContent.Font);
+                columnHeader.Width = Convert.ToInt32((double)sizeF.Width + 0.5) + 10;
+
+                listCSVContent.Columns.Add(columnHeader);
+            }
+        }
+
+        private void UpdateProgressBar(double currentSize, double fileSize)
+        {
+            progressBarCSVLoading.Value = (int)(currentSize / fileSize * 100);
+        }
+
+        private void UpdateCheckList(EventType eType, bool state)
+        {
+            switch (eType)
+            {
+                case EventType.CONNECT:
+                    chbConnect.Checked = state;
+                    break;
+                case EventType.DISCONNECT:
+                    break;
+                case EventType.JOBSET:
+                    chbJob.Checked = state;
+                    chbLabel.Checked = false;
+                    chbDatabase.Checked = false;
+                    chbFirstRecord.Checked = false;
+                    break;
+                case EventType.JOBSTOPPED:
+                    break;
+                case EventType.JOBSTARTED:
+                    chbStart.Checked = state;
+                    break;
+                case EventType.IOSET:
+                    break;
+                case EventType.PRINTSTARTED:
+                    break;
+                case EventType.LOADEDDATABASE:
+                    chbDatabase.Checked = state;
+                    chbLabel.Checked = false;
+                    chbFirstRecord.Checked = false;
+                    break;
+                case EventType.SETLABEL:
+                    chbLabel.Checked = state;
+                    break;
+                case EventType.SENDFIRSTRECORD:
+                    chbFirstRecord.Checked = state;
+                    break;
+                default:
+                    chbConnect.Checked = state;
+                    chbJob.Checked = state;
+                    chbDatabase.Checked = state;
+                    chbLabel.Checked = state;
+                    chbFirstRecord.Checked = state;
+                    chbStart.Checked = state;
+                    chbHelp_7.Checked = state;
+                    break;
+            }
         }
         #endregion
 
@@ -572,55 +747,29 @@ namespace RJDashboard
             }
         }
 
-        #endregion
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            rjDevice.RJConnect("10.10.2.1");
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            rjDevice.RJDisconnect();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            rjDevice.RJSetJob("test_LK.job");
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            rjDevice.RJStartJob();
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            rjDevice.RJStopJob();
-        }
-
         private void tileSendData_Click(object sender, EventArgs e)
         {
             if (listCSVContent.SelectedItems.Count <= 0)
             {
                 MessageBox.Show("Zaznacz rekord, który chcesz wydrukować!", "Uwaga", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //UpdateCheckList(helper.FirstRecord, false);
+                UpdateCheckList(EventType.SENDFIRSTRECORD, false);
             }
             else
             {
                 double actualItem = listCSVContent.Items.IndexOf(listCSVContent.SelectedItems[0]) + 1;
 
                 rjDevice.SetPrinterControlParameters(
-                    radioPrintTrigger.Checked, 
-                    chbInvalidContent.Checked, 
-                    chbPrintReject.Checked, 
-                    chbPrintAborted.Checked, 
-                    chbPrintSpeedError.Checked, 
-                    chbMissingContent.Checked, 
+                    radioPrintTrigger.Checked,
+                    chbInvalidContent.Checked,
+                    chbPrintReject.Checked,
+                    chbPrintAborted.Checked,
+                    chbPrintSpeedError.Checked,
+                    chbMissingContent.Checked,
                     chbBufferFull.Checked);
 
                 //rjDevice.showEventResponseWithStatusOk = chbShowEventResponseWithStatusOk.Checked;
-                //UpdateCheckList(helper.FirstRecord, true);
+
+                UpdateCheckList(EventType.SENDFIRSTRECORD, true);
 
                 rjDevice.ManualSendRecordToPrint(actualItem);
             }
@@ -631,15 +780,15 @@ namespace RJDashboard
             if (rjDevice.GetVariableContentsCount() <= 0)
             {
                 MessageBox.Show("Brak wczytanej etykiety!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //UpdateCheckList(helper.Label, false);
+                UpdateCheckList(EventType.SETLABEL, false);
                 return;
             }
 
             if (rjDevice.GetDatabaseMaxRecords() <= 0)
             {
                 MessageBox.Show("Wpierw wczytaj plik z bazą danych!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //UpdateCheckList(helper.Label, false);
-                //return;
+                UpdateCheckList(EventType.SETLABEL, false);
+                return;
             }
 
             string fileName = OpenXmlFile();
@@ -649,24 +798,10 @@ namespace RJDashboard
 
                 LoadVariableContentsForLabel();
                 LoadOutputsSettings();
+                UpdateCheckList(EventType.SETLABEL, true);
 
                 MessageBox.Show("Ustawienia zostały wczytane.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-        }
-
-        private string OpenXmlFile()
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = labelSettingsPath;
-            openFileDialog.Filter = "Label settings files (*.xml)|*.xml";
-            //openFileDialog.Filter = "All Files (*.*)|*.*";
-            openFileDialog.FilterIndex = 0;
-            openFileDialog.RestoreDirectory = false;
-            openFileDialog.Multiselect = false;
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
-                return null;
-
-            return openFileDialog.FileName;            
         }
 
         private void tileSetOutputToColumn_Click(object sender, EventArgs e)
@@ -678,7 +813,7 @@ namespace RJDashboard
             {
                 MessageBox.Show("Wybierz wyjście, którą chcesz przypisać do pola etykiety", "Uwaga", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
-            }                
+            }
 
             if (listLabelContents.SelectedItems.Count <= 0)
             {
@@ -691,6 +826,7 @@ namespace RJDashboard
 
             rjDevice.AssignOutputToDataField(outputNumber, labelContentNumber);
             LoadOutputsSettings();
+            LoadVariableContentsForLabel();
         }
 
         private void tileClearOutputToColumn_Click(object sender, EventArgs e)
@@ -706,29 +842,7 @@ namespace RJDashboard
 
             rjDevice.AssignOutputToDataField(-1, labelContentNumber);
             LoadOutputsSettings();
-        }
-
-        private void LoadToComboDigitalOutputs()
-        {
-            comboOutputs.Items.Clear();
-
-            IDictionary<int, DigitalOutput> outputs = rjDevice.GetDigitalOutputs();
-
-            for (int i = 0; i < outputs.Count; i++)
-            {
-                comboOutputs.Items.Add(outputs[i]);
-            }
-        }
-
-        private void LoadToComboCSVHeaders()
-        {
-            comboCSVHeaders.Items.Clear();
-            List<Header> headers = rjDevice.GetHeaders();
-
-            for (int i = 0; i < headers.Count; i++)
-            {
-                comboCSVHeaders.Items.Add(headers[i]);
-            }
+            LoadVariableContentsForLabel();
         }
 
         private void tileSetDataCSVToLabel_Click(object sender, EventArgs e)
@@ -784,134 +898,124 @@ namespace RJDashboard
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            if (rjDevice.LoadDatabase(openFileDialog.FileName) == true)
-            {
-                listCSVContent.Items.Clear();
-                listCSVContent.Columns.Clear();
-
-                comboCSVHeaders.Items.Clear();
-
-                MessageBox.Show("Baza została poprawnie wczytana do pamięci.\n Naciśnij OK aby wyświetlić dane.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                //LoadCSVDataToListView();
-
-                //UpdateCheckList(helper.Database, true);
-
-                LoadVariableContentsForLabel();
-            }     
-        }
-
-        /*
-        private void ParseCSVDataSource(string fileName)
-        {
-
-            if (reaJetControl._csvDatabase.ClearDatabase() == false)
-            {
-                MessageBox.Show("Błąd przygotowania danych!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                UpdateCheckList(helper.Database, false);
-                return;
-            }
-
-            //reaJetControl._listLabelProperty[index].AssignedColumnToLoadCSVData
-
-
-
-            //dołożone w wersji 1.07 - czyszcze przypisane kolumny po załadowaniu bazy
-            reaJetControl.ClearAssignedColumnToLoadCSVDataInListLabelProperty();
-            reaJetControl.ClearAssignedOutpuInListLabelProperty();
-
-            //    ListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize)
-            progressBarCSVLoading.Visible = true;
-            progressBarCSVLoading.Minimum = 0;
-            progressBarCSVLoading.Maximum = 100;
-
-            const char fieldSeparator = ';';
-            bool createHeader = true;
-            string logInfo = "";
             try
             {
-                using (var sr = new StreamReader(fileName, Encoding.UTF8, detectEncodingFromByteOrderMarks: true))
+                if (rjDevice.LoadDatabase(openFileDialog.FileName) == true)
                 {
-                    DisplayEvents("Baza: " + fileName);
+                    txtFileName.Text = openFileDialog.FileName;
 
-                    FileInfo fileCSV = new FileInfo(fileName);
-                    long fileSize = fileCSV.Length;
-                    long currentSize = 0;
+                    listCSVContent.Items.Clear();
+                    listCSVContent.Columns.Clear();
+                    comboCSVHeaders.Items.Clear();
 
-                    long row = 0;
-                    int numberOfColumns = 0;
+                    MessageBox.Show("Baza została poprawnie wczytana do pamięci.\n Naciśnij OK aby wyświetlić dane.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    while (!sr.EndOfStream)
-                    {
-                        string line = sr.ReadLine();
-                        currentSize += line.Length;
+                    ShowDatabaseInListView();
+                    UpdateCheckList(EventType.LOADEDDATABASE, true);
 
-                        UpdateProgressBar(currentSize, fileSize);
-
-                        List<string> record = line.Split(fieldSeparator).ToList();
-
-                        if (createHeader)
-                        {
-                            numberOfColumns = record.Count();
-                            reaJetControl._csvDatabase.AddCSVDataHeaders(record);
-                            createHeader = false;
-                        }
-                        else
-                        {
-                            row += 1;
-                            if (numberOfColumns == record.Count)
-                            {
-                                reaJetControl._csvDatabase.AddRecord(record);
-                            }
-                            else
-                            {
-                                logInfo += " - wiersz nr: " + row.ToString() + "\n";
-                                DisplayEvents("Niezgodność bazy - wiersz: " + row.ToString());
-
-                                Logger logger = LogManager.GetCurrentClassLogger();
-                                logger.Error("Brak zgodności rekordu: " + row.ToString());
-                            }
-                        }
-                    }
+                    LoadVariableContentsForLabel();
                 }
-
-                UpdateProgressBar(1.0, 1.0);
-
-                if (logInfo != "")
-                {
-                    MessageBox.Show("Podczas wczytywania bazy wystąpiła niezgodność w zawartości danych.\nPoniższe wiersze nie zostały wczytane: \n" + logInfo);
-                }
-                MessageBox.Show("Baza została poprawnie wczytana do pamięci.\n Naciśnij OK aby wyświetlić dane.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                progressBarCSVLoading.Visible = false;
-
-                LoadCSVDataToListView();
-                UpdateCheckList(helper.Database, true);
             }
             catch (Exception ex)
             {
-                _actualCSVFile = "";
-                txtCSVFileName.Text = (string)null;
-                checkActivateTrigger.Enabled = false;
                 checkSubitems.Enabled = false;
                 checkPartialMatches.Enabled = false;
                 progressBarCSVLoading.Visible = false;
-                tileFindMaxData.Enabled = false;
+
                 tileFindRecord.Enabled = false;
                 tileSendData.Enabled = false;
                 comboCSVHeaders.Items.Clear();
 
-                UpdateCheckList(helper.Database, false);
+                UpdateCheckList(EventType.LOADEDDATABASE, false);
 
-                string info = "Błąd otwarcia pliku: " + ex.ToString();
-                MessageBox.Show(info, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                Logger logger = LogManager.GetCurrentClassLogger();
-                logger.Error(ex, "Błąd otwarcia pliku: " + ex.ToString());
-
+                MessageBox.Show("Błąd podczas wczytywania bazy danych.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppLogger.GetLogger().Error("Błąd wczytywania bazy danych", ex);
                 return;
             }
-            //checkActivateCSVSendOnTrigger.Enabled = listCSVContent.Items.Count > 0;
         }
-        */
+
+        private void tileSaveLabelSettings_Click(object sender, EventArgs e)
+        {
+            int variableContentsCount = rjDevice.GetVariableContentsCount();
+            if (variableContentsCount <= 0)
+            {
+                MessageBox.Show("Brak wczytanej etykiety!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UpdateCheckList(EventType.SETLABEL, false);
+                return;
+            }
+
+            if (rjDevice.GetDatabaseMaxRecords() <= 0)
+            {
+                MessageBox.Show("Nie można zapisać danych jeżeli nie ma wczytanej bazy danych!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UpdateCheckList(EventType.LOADEDDATABASE, false);
+                return;
+            }
+
+            Stream file;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.InitialDirectory = labelSettingsPath;
+            saveFileDialog.Filter = "Label settings files (*.xml)|*.xml";
+            saveFileDialog.FilterIndex = 2;
+            saveFileDialog.RestoreDirectory = true;
+
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            if ((file = saveFileDialog.OpenFile()) != null)
+            {
+                try
+                {
+                    LabelSettings labelSettings = new LabelSettings();
+                    labelSettings.Save(file, txtFileName.Text, cmbJobFiles.Text, rjDevice.GetDTOLabelSettings());
+
+                    txtLabelSettings.Text = saveFileDialog.FileName;
+                    UpdateCheckList(EventType.SETLABEL, true);
+
+                    DisplayLogsAndErrors("Ustawienia etykiety - zapis: " + txtLabelSettings.Text, null, null);
+                }
+                catch (Exception ex)
+                {
+                    string info = "Błąd podczas zapisu ustawień etykiety. Spróbuj ponownie! ";
+                    MessageBox.Show(info, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    DisplayLogsAndErrors("Zapis ustawień etykiety", null, ex.ToString());
+                    UpdateCheckList(EventType.SETLABEL, false);
+
+                    AppLogger.GetLogger().Error("Błąd zapisu ustawień etykiety.", ex);
+                }
+            }
+        }
+
+        #endregion
+
+        #region TEST
+        private void button1_Click(object sender, EventArgs e)
+        {
+            rjDevice.RJConnect("10.10.2.1");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            rjDevice.RJDisconnect();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            rjDevice.RJSetJob("test_LK.job");
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            rjDevice.RJStartJob();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            rjDevice.RJStopJob();
+        }
+        #endregion
+
+
     }
 }
