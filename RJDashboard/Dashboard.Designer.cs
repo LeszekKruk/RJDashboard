@@ -617,16 +617,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabJobControl);
+            this.tabControl.Controls.Add(this.tabIOControl);
             this.tabControl.Controls.Add(this.tabDataPrint);
             this.tabControl.Controls.Add(this.tabLabelSettings);
-            this.tabControl.Controls.Add(this.tabIOControl);
             this.tabControl.Controls.Add(this.tabAbout);
             this.tabControl.Controls.Add(this.tabSettings);
             this.tabControl.FontWeight = MetroFramework.MetroTabControlWeight.Regular;
             this.tabControl.Location = new System.Drawing.Point(120, 195);
             this.tabControl.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 2;
+            this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(762, 495);
             this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl.Style = MetroFramework.MetroColorStyle.Orange;
@@ -731,6 +731,7 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox7.BackColor = System.Drawing.SystemColors.Window;
             this.groupBox7.Controls.Add(this.tileLoadLabelSettings);
             this.groupBox7.Controls.Add(this.tileSaveLabelSettings);
@@ -787,6 +788,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.BackColor = System.Drawing.SystemColors.Window;
             this.groupBox4.Controls.Add(this.tileClearOutputToColumn);
             this.groupBox4.Controls.Add(this.tileSetOutputToColumn);
@@ -847,6 +849,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.BackColor = System.Drawing.SystemColors.Window;
             this.groupBox3.Controls.Add(this.comboCSVHeaders);
             this.groupBox3.Controls.Add(this.tileClearDataCSVToLabel);
@@ -908,8 +911,9 @@
             // 
             // listLabelContents
             // 
-            this.listLabelContents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listLabelContents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listLabelContents.FullRowSelect = true;
             this.listLabelContents.GridLines = true;
             listViewGroup1.Header = "ListViewGroup";
@@ -1000,6 +1004,9 @@
             // 
             // listOutputs
             // 
+            this.listOutputs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listOutputs.FullRowSelect = true;
             this.listOutputs.GridLines = true;
             this.listOutputs.Location = new System.Drawing.Point(0, 89);
@@ -1099,6 +1106,7 @@
             // txtFileName
             // 
             this.txtFileName.CausesValidation = false;
+            this.txtFileName.ForeColor = System.Drawing.SystemColors.ControlText;
             this.txtFileName.Location = new System.Drawing.Point(5, 46);
             this.txtFileName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.txtFileName.Name = "txtFileName";
@@ -1107,15 +1115,17 @@
             this.txtFileName.TabIndex = 22;
             this.txtFileName.Text = "...";
             this.txtFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.txtFileName.UseStyleColors = true;
             // 
             // groupBox6
             // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox6.BackColor = System.Drawing.SystemColors.Window;
             this.groupBox6.Controls.Add(this.checkPartialMatches);
             this.groupBox6.Controls.Add(this.checkSubitems);
             this.groupBox6.Controls.Add(this.tileFindRecord);
             this.groupBox6.Controls.Add(this.txtSearchRecord);
-            this.groupBox6.Location = new System.Drawing.Point(372, 358);
+            this.groupBox6.Location = new System.Drawing.Point(391, 360);
             this.groupBox6.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Padding = new System.Windows.Forms.Padding(2);
@@ -1165,6 +1175,7 @@
             this.tileFindRecord.TileImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.tileFindRecord.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileFindRecord.UseTileImage = true;
+            this.tileFindRecord.Click += new System.EventHandler(this.tileFindRecord_Click);
             // 
             // txtSearchRecord
             // 
@@ -1243,6 +1254,8 @@
             // 
             // progressBarCSVLoading
             // 
+            this.progressBarCSVLoading.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarCSVLoading.FontSize = MetroFramework.MetroProgressBarSize.Small;
             this.progressBarCSVLoading.HideProgressText = false;
             this.progressBarCSVLoading.Location = new System.Drawing.Point(112, 70);
@@ -1269,6 +1282,7 @@
             this.tileClearCSVData.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.tileClearCSVData.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Regular;
             this.tileClearCSVData.UseTileImage = true;
+            this.tileClearCSVData.Click += new System.EventHandler(this.tileClearCSVData_Click);
             // 
             // listCSVContent
             // 
@@ -1316,9 +1330,9 @@
             this.metroLabel10.Location = new System.Drawing.Point(2, 20);
             this.metroLabel10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.metroLabel10.Name = "metroLabel10";
-            this.metroLabel10.Size = new System.Drawing.Size(158, 19);
+            this.metroLabel10.Size = new System.Drawing.Size(97, 19);
             this.metroLabel10.TabIndex = 2;
-            this.metroLabel10.Text = "Wczytaj dane z pliku CSV:";
+            this.metroLabel10.Text = "Źródło danych:";
             // 
             // tabAbout
             // 
@@ -1430,6 +1444,7 @@
             // 
             // metroLabel15
             // 
+            this.metroLabel15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.metroLabel15.FontSize = MetroFramework.MetroLabelSize.Small;
             this.metroLabel15.FontWeight = MetroFramework.MetroLabelWeight.Bold;
             this.metroLabel15.Location = new System.Drawing.Point(0, 443);
@@ -1445,6 +1460,7 @@
             // 
             // metroLabel9
             // 
+            this.metroLabel9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.metroLabel9.AutoSize = true;
             this.metroLabel9.FontSize = MetroFramework.MetroLabelSize.Small;
             this.metroLabel9.Location = new System.Drawing.Point(198, 443);
@@ -1478,6 +1494,7 @@
             this.chbStart.Margin = new System.Windows.Forms.Padding(2);
             this.chbStart.Name = "chbStart";
             this.chbStart.Size = new System.Drawing.Size(33, 16);
+            this.chbStart.Style = MetroFramework.MetroColorStyle.Orange;
             this.chbStart.TabIndex = 8;
             this.chbStart.Text = "6.";
             this.chbStart.UseVisualStyleBackColor = true;
@@ -1491,6 +1508,7 @@
             this.chbFirstRecord.Margin = new System.Windows.Forms.Padding(2);
             this.chbFirstRecord.Name = "chbFirstRecord";
             this.chbFirstRecord.Size = new System.Drawing.Size(33, 16);
+            this.chbFirstRecord.Style = MetroFramework.MetroColorStyle.Orange;
             this.chbFirstRecord.TabIndex = 7;
             this.chbFirstRecord.Text = "5.";
             this.chbFirstRecord.UseVisualStyleBackColor = true;
@@ -1504,6 +1522,7 @@
             this.chbLabel.Margin = new System.Windows.Forms.Padding(2);
             this.chbLabel.Name = "chbLabel";
             this.chbLabel.Size = new System.Drawing.Size(33, 16);
+            this.chbLabel.Style = MetroFramework.MetroColorStyle.Orange;
             this.chbLabel.TabIndex = 6;
             this.chbLabel.Text = "4.";
             this.chbLabel.UseVisualStyleBackColor = true;
@@ -1517,6 +1536,7 @@
             this.chbDatabase.Margin = new System.Windows.Forms.Padding(2);
             this.chbDatabase.Name = "chbDatabase";
             this.chbDatabase.Size = new System.Drawing.Size(33, 16);
+            this.chbDatabase.Style = MetroFramework.MetroColorStyle.Orange;
             this.chbDatabase.TabIndex = 5;
             this.chbDatabase.Text = "3.";
             this.chbDatabase.UseVisualStyleBackColor = true;
@@ -1530,6 +1550,7 @@
             this.chbJob.Margin = new System.Windows.Forms.Padding(2);
             this.chbJob.Name = "chbJob";
             this.chbJob.Size = new System.Drawing.Size(33, 16);
+            this.chbJob.Style = MetroFramework.MetroColorStyle.Orange;
             this.chbJob.TabIndex = 4;
             this.chbJob.Text = "2.";
             this.chbJob.UseVisualStyleBackColor = true;
@@ -1543,6 +1564,7 @@
             this.chbConnect.Margin = new System.Windows.Forms.Padding(2);
             this.chbConnect.Name = "chbConnect";
             this.chbConnect.Size = new System.Drawing.Size(33, 16);
+            this.chbConnect.Style = MetroFramework.MetroColorStyle.Orange;
             this.chbConnect.TabIndex = 3;
             this.chbConnect.Text = "1.";
             this.chbConnect.UseVisualStyleBackColor = true;
@@ -1926,6 +1948,7 @@
             this.Controls.Add(this.panelJobStatus);
             this.Controls.Add(this.panelConnectionStatus);
             this.Controls.Add(this.panelLeftButtons);
+            this.MinimumSize = new System.Drawing.Size(900, 700);
             this.Name = "Dashboard";
             this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "RJDashboard";

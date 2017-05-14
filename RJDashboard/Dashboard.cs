@@ -159,12 +159,30 @@ namespace RJDashboard
             }
         }
 
+        public void UpdateOutputsState(List<bool> outputsState)
+        {
+            if (this.InvokeRequired)
+            {
+                Action<List<bool>> updateOutputsState = new Action<List<bool>>(this.UpdateOutputsState);
+                if (!this.Created || this.IsDisposed)
+                    return;
+                this.Invoke((Delegate)updateOutputsState, (object)outputsState);
+            }
+            else
+            {
+                for (int i = 0; i < outputsState.Count; i++)
+                {
+                    SetOutputState(i, outputsState[i]);
+                }
+            }
+        }
+
         #endregion
 
         #region PRIVATE Methods
 
-            #region JOB Title
-            private void LoadAndSetJobFiles(string[] files, string actualJob)
+        #region JOB Title
+        private void LoadAndSetJobFiles(string[] files, string actualJob)
             {
                 if (this.InvokeRequired)
                 {
@@ -806,7 +824,7 @@ namespace RJDashboard
 
         private void tileSetOutputToColumn_Click(object sender, EventArgs e)
         {
-            int labelContentNumber;
+            int labelContentRow;
             int outputNumber;
 
             if (string.IsNullOrWhiteSpace(comboOutputs.Text))
@@ -821,10 +839,10 @@ namespace RJDashboard
                 return;
             }
 
-            labelContentNumber = listLabelContents.Items.IndexOf(listLabelContents.SelectedItems[0]);
+            labelContentRow = listLabelContents.Items.IndexOf(listLabelContents.SelectedItems[0]);
             outputNumber = (comboOutputs.SelectedItem as DigitalOutput).Id - 1;
 
-            rjDevice.AssignOutputToDataField(outputNumber, labelContentNumber);
+            rjDevice.AssignOutputToDataField(outputNumber, labelContentRow);
             LoadOutputsSettings();
             LoadVariableContentsForLabel();
         }
@@ -882,6 +900,7 @@ namespace RJDashboard
 
             rjDevice.AssignDataFieldToContent(-1, labelContentNumber);
 
+            LoadOutputsSettings();
             LoadVariableContentsForLabel();
         }
 
@@ -987,6 +1006,77 @@ namespace RJDashboard
             }
         }
 
+        private void tileClearCSVData_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tileFindRecord_Click(object sender, EventArgs e)
+        {
+            if (txtSearchRecord.Text != "" || txtSearchRecord.Text == null)
+            {
+                bool searchSubitems = checkSubitems.Checked;
+                bool partialMatches = checkPartialMatches.Checked;
+                ListViewItem foundItem = listCSVContent.FindItemWithText(txtSearchRecord.Text, searchSubitems, 0, partialMatches);
+                if (foundItem != null)
+                {
+                    listCSVContent.TopItem = foundItem;
+                }
+                else
+                {
+                    MessageBox.Show("Nie znaleziono szukanego rekordu.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Wpisz dane, których szukasz!", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #region OUTPUTS
+        private void SetOutputState(int output, bool state)
+        {
+            Color color;
+            if (state == true)
+            {
+                color = Color.Green;
+            }
+            else
+            {
+                color = Color.Gray;
+            }
+            switch (output)
+            {
+                case 0:
+                    labelOut1.BackColor = color;
+                    break;
+                case 1:
+                    labelOut2.BackColor = color;
+                    break;
+                case 2:
+                    labelOut3.BackColor = color;
+                    break;
+                case 3:
+                    labelOut4.BackColor = color;
+                    break;
+                case 4:
+                    labelOut5.BackColor = color;
+                    break;
+                case 5:
+                    labelOut6.BackColor = color;
+                    break;
+                case 6:
+                    labelOut7.BackColor = color;
+                    break;
+                case 7:
+                    labelOut8.BackColor = color;
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+
         #endregion
 
         #region TEST
@@ -1014,8 +1104,10 @@ namespace RJDashboard
         {
             rjDevice.RJStopJob();
         }
+
+
         #endregion
 
-
+        
     }
 }
