@@ -20,9 +20,8 @@ namespace RJLogger
         public static AppLogger GetLogger()
         {
             if (_defaultLogger == null)
-            {
                 _defaultLogger = new AppLogger();
-            }
+
             return _defaultLogger;
         }
 

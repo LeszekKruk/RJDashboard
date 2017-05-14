@@ -37,7 +37,7 @@ namespace RJDashboard.Tests.Job
         public void CreateNewJob_With_Wrong_JobId_Throws_ArgumentException()
         {
             Exception ex = Assert.Throws<ArgumentException>(() => new RJController.Job.RJJob(-1, "C:\\temp\\_ReaTest\\jobs\\4 head.job"));
-            Assert.Equal("Parameter JobId must be > null", ex.Message);
+            Assert.Equal("Parameter JobId musi być większy od 0.", ex.Message);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace RJDashboard.Tests.Job
         {
             RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.LabelManagement.Count;
+            var result = job.VariableContents.Count;
             Assert.Equal(13, result);
         }
 
@@ -74,7 +74,7 @@ namespace RJDashboard.Tests.Job
         {
             RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.LabelManagement[1].ObjectName;
+            var result = job.VariableContents[1].ObjectName;
             Assert.Equal("Textbox_2", result);
         }
 
@@ -83,7 +83,7 @@ namespace RJDashboard.Tests.Job
         {
             RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.LabelManagement[1].ContentName;
+            var result = job.VariableContents[1].ContentName;
             Assert.Equal("Text _1", result);
         }
 
@@ -92,7 +92,7 @@ namespace RJDashboard.Tests.Job
         {
             RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.LabelManagement[1].ContentValue;
+            var result = job.VariableContents[1].ContentValue;
             Assert.Equal("BBBBBBBBBBBBBBBBBBBBBBBBBBBBB", result);
         }
 
@@ -101,7 +101,7 @@ namespace RJDashboard.Tests.Job
         {
             RJController.Job.RJJob job = new RJController.Job.RJJob(1, "C:\\temp\\_ReaTest\\jobs\\bodende.job");
 
-            var result = job.LabelManagement[12].ContentValue;
+            var result = job.VariableContents[12].ContentValue;
             Assert.Equal("MMM", result);
         }
     }

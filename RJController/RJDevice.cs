@@ -23,6 +23,7 @@ namespace RJController
         static private ReaPi.eventCallbackPtr _eventCallback;
 
         private Queue<Record> _queueRecords = new Queue<Record>();
+        private int MAX_DIGITAL_OUTPUTS = 8;
 
         IDashboard _view;
         private bool isPrintTrigger = true;
@@ -51,6 +52,7 @@ namespace RJController
 
                 rjConnection.IOConfiguration = "osb_hr_1.dio";
 
+                /*
                 for (int i = 0; i < 8; i++)
                 {
                     DigitalOutput output = new DigitalOutput();
@@ -60,9 +62,10 @@ namespace RJController
                     output.DataField = i;
 
                     rjConnection.AddOutput(i, output);
-                }
+                }*/
                 //test
                 RegisterConnection();
+                SetDigitalOutputsProperty();
             }
             else
             {
@@ -644,6 +647,49 @@ namespace RJController
             database.ActualRecord = 1;
         }
 
+        private void SetDigitalOutputsProperty()
+        {
+            string description = "";
+            for (int i = 0; i < MAX_DIGITAL_OUTPUTS; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        description = "Status zadania";
+                        break;
+                    case 1:
+                        description = "Błąd drukarki";
+                        break;
+                    case 2:
+                        description = "Sterowanie sztaplarką";
+                        break;
+                    case 3:
+                        description = "Sterowanie odrzutnikiem";
+                        break;
+                    default:
+                        description = "";
+                        break;
+                }
+                DigitalOutput output = new DigitalOutput();
+                output.Id = i + 1;
+                //output.OutputName = "Out " + i.ToString();
+                output.Name = ((DOutputControl)i).ToString();
+                output.Description = description;
+                if (i < 4)
+                {
+                    output.IsActive = true;
+                }
+                else
+                {
+                    output.IsActive = false;
+                }
+
+                output.DataField = -1;
+
+                rjConnection.AddOutput(output);
+            }
+        }
+
         #endregion
 
         #region OnEvent Methods
@@ -952,6 +998,19 @@ namespace RJController
 
         }
 
+        public List<DTOLabelSettings> GetDTOLabelSettings()
+        {
+            List<DTOLabelSettings> listDTO = new List<DTOLabelSettings>();
+
+            foreach (var item in rjConnection.Job.VariableContents)
+            {
+                DTOLabelSettings dto = new DTOLabelSettings(item.GroupName, "", item.ObjectName, item.ContentName, item.OutputControl, item.DataField);
+                listDTO.Add(dto);
+            }
+
+            return listDTO;
+        }
+
         public void AssignSettingsToVariableContents(string fileName)
         {
             List<DTOLabelSettings> listDTO = new List<DTOLabelSettings>();
@@ -978,6 +1037,11 @@ namespace RJController
             return database.GetHeaders();
         }
 
+        public int GetHeadersCount()
+        {
+            return database.GetHeadersCount();
+        }
+
         public int GetVariableContentsCount()
         {
             return rjConnection.Job.VariableContents.Count;
@@ -993,7 +1057,12 @@ namespace RJController
             return database.ActualRecord;
         }
 
-        public IDictionary<int, DigitalOutput> GetDigitalOutputs()
+        public List<string> GetRecordWithKey(double item)
+        {
+            return database.GetRecordWithKey(item);
+        }
+
+        public List<DigitalOutput> GetDigitalOutputs()
         {
             return rjConnection.GetOutputs();
         }
@@ -1034,6 +1103,15 @@ namespace RJController
             return database.GetHeaderName(columnNumber);
         }
 
+        public string GetOutputName(int outputNumber)
+        {
+            int headresCount = database.GetHeadersCount();
+            if (outputNumber < 0 || outputNumber > MAX_DIGITAL_OUTPUTS)
+                return "";
+
+            return rjConnection.GetOuputName(outputNumber);
+        }
+
         public void AssignOutputToDataField(int outputNumber, int dataField)
         {
             if (outputNumber > 0)
@@ -1055,7 +1133,7 @@ namespace RJController
 
             const char fieldSeparator = ';';
             bool createHeader = true;
-            string logInfo = "";
+
             try
             {
                 using (var sr = new StreamReader(fileName, Encoding.UTF8, detectEncodingFromByteOrderMarks: true))

@@ -14,5 +14,9 @@ namespace RJController.IO
         public bool IsActive { get; set; }
         public int DataField { get; set; }
 
+        public override string ToString()
+        {
+            return Description;
+        }
     }
 }

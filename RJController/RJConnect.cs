@@ -16,12 +16,14 @@ namespace RJController
         public ReaPi.LabelContentHandle LabelContentHandle { get; set; }
         public RJJob Job { get; set; }
         public string IOConfiguration { get; set; }
-        public IDictionary<int, DigitalOutput> Outputs { get; set; }
+        //public IDictionary<int, DigitalOutput> Outputs { get; set; }
+        public List<DigitalOutput> Outputs { get; set; }
 
         public RJConnect()
         {
             ConnectionID = ReaPi.ConnectionIdentifier.INVALID_CONNECTION;
-            Outputs = new Dictionary<int, DigitalOutput>();
+            //Outputs = new Dictionary<int, DigitalOutput>();
+            Outputs = new List<DigitalOutput>();
             Job = (RJJob)null;
         }
 
@@ -35,15 +37,26 @@ namespace RJController
             LabelContentHandle = ReaPi.CreateLabelContent();
         } 
         
-        public void AddOutput(int number, DigitalOutput output)
+        public void AddOutput(DigitalOutput output)
         {
             if (Outputs == null)
-                Outputs = new Dictionary<int, DigitalOutput>();
+                Outputs = new List<DigitalOutput>();
 
-            Outputs.Add(number, output);
+            if (Outputs.Count < 8)
+            {
+                Outputs.Add(output);
+            } else
+            {
+                throw new Exception("Przekroczona ilość wyjść!");
+            }            
+        }
+        
+        public string GetOuputName(int index)
+        {
+            return Outputs[index].Description;
         } 
 
-        public IDictionary<int, DigitalOutput> GetOutputs()
+        public List<DigitalOutput> GetOutputs()
         {
             return Outputs;
         }

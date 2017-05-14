@@ -14,6 +14,9 @@ namespace RJController.Enums
         JOBSTOPPED,
         JOBSTARTED,
         IOSET,
-        PRINTSTARTED
+        PRINTSTARTED,
+        LOADEDDATABASE,
+        SETLABEL,
+        SENDFIRSTRECORD
     }
 }
