@@ -105,7 +105,12 @@ namespace RJDashboard
                 case ErrorType.nullJob:
                     errorDescription = "Brak wybranego zadania.";
                     errorSolution = "Wybierz zadanie, które chcesz załadować na sterownik.\n";
-                    errorSolution += "Wybierz przycisk 'Ustaw'";
+                    errorSolution += "Naciśnij przycisk 'Ustaw' - upewnij się, że włączony jest tryb STOP";
+                    break;
+                case ErrorType.nullIO:
+                    errorDescription = "Brak wybranych ustawień wejść/wyjść.";
+                    errorSolution = "Wybierz ustwaienia, które chcesz załadować na sterownik.\n";
+                    errorSolution += "Naciśnij przycisk 'Ustaw' - upewnij się, że włączony jest tryb STOP";
                     break;
                 default:
                     errorDescription = "STOP Job";
